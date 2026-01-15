@@ -6,26 +6,27 @@
     <title>FRSH - Earn & Invest</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --bg: #f4f7f6; --main: #00796b; --white: #ffffff; --bkash: #d81b60; --nagad: #f44336; --danger: #e53935; }
+        :root { --bg: #f4f7f6; --main: #00796b; --white: #ffffff; --bkash: #d81b60; --danger: #e53935; }
         body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: var(--bg); user-select: none; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
         
-        .header { background: var(--main); color: white; padding: 15px; text-align: center; font-weight: bold; font-size: 18px; position: sticky; top: 0; z-index: 1000; }
-        .page { display: none; padding-bottom: 80px; animation: fadeIn 0.3s; }
+        .header { background: var(--main); color: white; padding: 15px; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 1000; }
+        .page { display: none; padding-bottom: 80px; }
         .active-page { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .balance-card { background: linear-gradient(135deg, #00796b, #004d40); color: white; margin: 15px; padding: 25px; border-radius: 15px; text-align: center; }
         
-        /* bKash Payment UI */
-        .payment-card { background: var(--bkash); color: white; padding: 20px; border-radius: 15px; margin: 15px; text-align: center; }
-        .payment-card input { background: white; color: black; text-align: center; font-weight: bold; }
-        .verify-btn { background: #b71c1c; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        /* Product Design */
+        .pkg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
+        .square-card { background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .buy-btn { background: #ff9800; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 5px; }
 
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
         .nav-item { text-align: center; font-size: 11px; color: #888; cursor: pointer; flex: 1; }
         .nav-item i { font-size: 20px; margin-bottom: 4px; }
         .nav-item.active { color: var(--main); font-weight: bold; }
+        
+        .my-pkg-item { background: white; margin: 10px 15px; padding: 15px; border-radius: 10px; border-left: 5px solid var(--main); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
@@ -36,40 +37,43 @@
     <div id="home" class="page active-page">
         <div class="balance-card">
             <p style="margin:0;">বর্তমান ব্যালেন্স</p>
-            <h1 id="mainBalance" style="margin:10px 0;">৳ 0.00</h1>
+            <h1 id="mainBalance">৳ 0.00</h1>
         </div>
-        <div id="packageList" style="padding:15px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"></div>
+        <h4 style="margin: 10px 0 0 20px; color: #555;">পণ্যসমূহ</h4>
+        <div id="packageList" class="pkg-grid">লোড হচ্ছে...</div>
+    </div>
+
+    <div id="myPkg" class="page">
+        <h3 style="text-align: center; padding: 20px 0 10px 0;">আমার পণ্যসমূহ</h3>
+        <div id="myPkgList"></div>
     </div>
 
     <div id="deposit" class="page">
-        <div class="payment-card">
+        <div style="background: var(--bkash); color: white; padding: 20px; border-radius: 15px; margin: 15px; text-align: center;">
             <h3>পেমেন্ট ভেরিফাই</h3>
             <input type="text" id="depTrx" placeholder="TrxID (ট্রানজেকশন আইডি)">
-            <div style="text-align: left; font-size: 13px; background: rgba(0,0,0,0.15); padding: 15px; border-radius: 10px; margin: 10px 0;">
-                • বিকাশ/নগদ সেন্ড মানি করুন।<br>
-                • আমাদের নম্বর: <b id="adminNum">01708078333</b> <i class="fas fa-copy" onclick="copyNum()" style="cursor:pointer; margin-left:8px;"></i><br>
-                • টাকা পাঠিয়ে TrxID টি উপরে দিন।
-            </div>
+            <p style="font-size: 13px; text-align: left;">সেন্ড মানি করুন: <b>01708078333</b> <i class="fas fa-copy" onclick="copyNum()"></i></p>
             <input type="number" id="depAmt" placeholder="টাকার পরিমাণ">
-            <button class="verify-btn" id="submitDepBtn">VERIFY PAYMENT</button>
+            <button onclick="sendDep()" style="background: #b71c1c; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold;">VERIFY</button>
         </div>
     </div>
 
     <div id="withdraw" class="page">
         <div style="padding: 20px; background: white; margin: 15px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-            <h3 style="text-align: center; color: var(--danger);">টাকা উত্তোলন (Withdraw)</h3>
+            <h3 style="text-align: center; color: var(--danger);">উইথড্র (Withdraw)</h3>
             <select id="withMethod">
-                <option value="bKash Personal">bKash (বিকাশ পার্সোনাল)</option>
-                <option value="Nagad Personal">Nagad (নগদ পার্সোনাল)</option>
+                <option value="bKash">bKash (বিকাশ)</option>
+                <option value="Nagad">Nagad (নগদ)</option>
             </select>
             <input type="number" id="withAmt" placeholder="মিনিমাম ১২০ টাকা">
-            <input type="text" id="withNum" placeholder="আপনার বিকাশ/নগদ নম্বর">
-            <button id="withBtn" style="background: var(--danger); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px;">রিকোয়েস্ট পাঠান</button>
+            <input type="text" id="withNum" placeholder="নম্বর দিন">
+            <button onclick="sendWith()" style="background: var(--danger); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold;">রিকোয়েস্ট পাঠান</button>
         </div>
     </div>
 
     <div class="nav-bar">
         <div id="navHome" class="nav-item active"><i class="fas fa-home"></i><br>Home</div>
+        <div id="navMyPkg" class="nav-item"><i class="fas fa-shopping-bag"></i><br>আমার পণ্য</div>
         <div id="navDep" class="nav-item"><i class="fas fa-plus-circle"></i><br>Deposit</div>
         <div id="navWith" class="nav-item"><i class="fas fa-wallet"></i><br>Withdraw</div>
     </div>
@@ -93,20 +97,97 @@
     const db = getDatabase(app);
     let currentUser = localStorage.getItem('loggedUser') || "user1";
 
-    // Withdraw Logic
-    document.getElementById('withBtn').onclick = async () => {
-        let amt = document.getElementById('withAmt').value;
-        let num = document.getElementById('withNum').value;
-        let method = document.getElementById('withMethod').value;
-        if(amt < 120 || !num) return alert("সঠিক তথ্য দিন।");
-        
-        await push(ref(db, 'withdraws'), { user: currentUser, amount: amt, number: num, method: method, status: 'pending' });
-        alert("উইথড্র রিকোয়েস্ট সফল হয়েছে।");
+    // ১. পণ্য বা প্যাকেজ লোড করা
+    onValue(ref(db, 'products'), (snapshot) => {
+        let html = "";
+        snapshot.forEach((child) => {
+            let p = child.val();
+            html += `<div class="square-card">
+                <b>${p.name}</b><br>
+                <small>মূল্য: ৳${p.price}</small><br>
+                <small>ডেইলি: ৳${p.daily}</small>
+                <button class="buy-btn" onclick="buyPkg('${child.key}', ${p.price}, '${p.name}', ${p.daily}, ${p.days})">কিনুন</button>
+            </div>`;
+        });
+        document.getElementById('packageList').innerHTML = html || "কোন পণ্য নেই।";
+    });
+
+    // ২. প্যাকেজ কেনা এবং অটো ইনকাম লজিক
+    window.buyPkg = async (id, price, name, daily, days) => {
+        const userRef = ref(db, 'users/' + currentUser);
+        const snap = await get(userRef);
+        let balance = snap.val().balance || 0;
+
+        if(balance < price) return alert("পর্যাপ্ত ব্যালেন্স নেই।");
+
+        if(confirm(name + " কিনতে চান?")){
+            await update(userRef, { balance: balance - price });
+            await push(ref(db, 'user_packages/' + currentUser), {
+                name, daily, days, buyDate: Date.now(), lastClaim: Date.now()
+            });
+            alert("কেনা সফল হয়েছে!");
+        }
     };
 
-    // Nav Logic
-    const navs = ['navHome', 'navDep', 'navWith'];
-    const pages = ['home', 'deposit', 'withdraw'];
+    // ৩. অটোমেটিক ডেইলি টাকা অ্যাড হওয়া
+    async function collectDaily() {
+        const pkgRef = ref(db, 'user_packages/' + currentUser);
+        const snap = await get(pkgRef);
+        if(snap.exists()){
+            let totalIncome = 0;
+            let updates = {};
+            let now = Date.now();
+
+            snap.forEach(child => {
+                let p = child.val();
+                let last = p.lastClaim || p.buyDate;
+                if(now - last >= 86400000){ // ২৪ ঘণ্টা পর
+                    totalIncome += parseFloat(p.daily);
+                    updates[child.key + '/lastClaim'] = now;
+                }
+            });
+
+            if(totalIncome > 0){
+                const userRef = ref(db, 'users/' + currentUser);
+                const uSnap = await get(userRef);
+                await update(userRef, { balance: (uSnap.val().balance || 0) + totalIncome });
+                await update(pkgRef, updates);
+                alert("আপনার আজকের মুনাফা ৳" + totalIncome + " যোগ করা হয়েছে।");
+            }
+        }
+    }
+    collectDaily();
+
+    // ৪. আমার পণ্য লিস্ট
+    onValue(ref(db, 'user_packages/' + currentUser), (s) => {
+        let html = "";
+        s.forEach(c => {
+            let p = c.val();
+            html += `<div class="my-pkg-item"><b>${p.name}</b><br><small>ডেইলি আয়: ৳${p.daily}</small></div>`;
+        });
+        document.getElementById('myPkgList').innerHTML = html || "<p style='text-align:center;'>কোন পণ্য কেনা নেই।</p>";
+    });
+
+    // ৫. ডিপোজিট ও উইথড্র ফাংশন
+    window.sendDep = async () => {
+        let amt = document.getElementById('depAmt').value;
+        let trx = document.getElementById('depTrx').value;
+        if(!amt || !trx) return alert("তথ্য দিন।");
+        await push(ref(db, 'deposits'), { user: currentUser, amount: amt, trx: trx, status: 'pending' });
+        alert("পাঠানো হয়েছে।");
+    };
+
+    window.sendWith = async () => {
+        let amt = document.getElementById('withAmt').value;
+        let num = document.getElementById('withNum').value;
+        if(amt < 120) return alert("মিনিমাম ১২০ টাকা।");
+        await push(ref(db, 'withdraws'), { user: currentUser, amount: amt, number: num, status: 'pending' });
+        alert("উইথড্র রিকোয়েস্ট সফল।");
+    };
+
+    // ৬. নেভিগেশন
+    const navs = ['navHome', 'navMyPkg', 'navDep', 'navWith'];
+    const pages = ['home', 'myPkg', 'deposit', 'withdraw'];
     navs.forEach((n, i) => {
         document.getElementById(n).onclick = () => {
             pages.forEach(p => document.getElementById(p).classList.remove('active-page'));
@@ -116,7 +197,11 @@
         };
     });
 
-    window.copyNum = () => { navigator.clipboard.writeText("01708078333"); alert("নম্বর কপি হয়েছে!"); };
+    onValue(ref(db, 'users/' + currentUser), s => {
+        if(s.exists()) document.getElementById('mainBalance').innerText = '৳' + s.val().balance.toFixed(2);
+    });
+
+    window.copyNum = () => { navigator.clipboard.writeText("01708078333"); alert("কপি হয়েছে!"); };
 </script>
 </body>
 </html>
