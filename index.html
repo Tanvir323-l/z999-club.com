@@ -3,123 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRSH - Earn & Refer</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>FRSH - Earn & Invest</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #ffffff; --accent: #00d2d3; --gold: #f39c12; --danger: #ff7675; --card: #f8f9fa; --text: #2d3436; --border: #dfe6e9; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--primary); color: var(--text); margin: 0; min-height: 100vh; user-select: none; }
+        :root { --bg: #f4f7f6; --main: #00796b; --white: #ffffff; --bkash: #d81b60; --nagad: #f44336; --danger: #e53935; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: var(--bg); user-select: none; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
         
-        /* Notice */
-        .notice-container { background: #fff3cd; color: #856404; padding: 10px; font-size: 13px; border-bottom: 1px solid #ffeeba; overflow: hidden; position: relative; z-index: 100; }
-        .notice-text { display: inline-block; white-space: nowrap; animation: scroll 15s linear infinite; }
-        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        /* Header with Share Button */
-        .header { background: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top:0; z-index: 1000; }
-        .header .title { font-size: 22px; font-weight: 900; color: var(--accent); flex-grow: 1; text-align: center; margin-left: 40px; }
-        .share-icon-btn { font-size: 20px; color: var(--accent); cursor: pointer; padding: 5px 10px; transition: 0.3s; }
-        .share-icon-btn:active { transform: scale(0.9); }
-
-        /* App Styles */
-        .auth-card, .card-box { background: var(--card); padding: 25px; border-radius: 20px; width: 85%; max-width: 350px; border: 1px solid var(--border); margin: 20px auto; text-align: center; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--border); outline: none; background: white; }
-        .btn-main { width: 100%; padding: 12px; background: var(--accent); border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; }
-        #mainApp { display: none; }
-        .page { display: none; padding: 20px; padding-bottom: 100px; animation: fadeIn 0.4s ease; }
+        .header { background: var(--main); color: white; padding: 15px; text-align: center; font-weight: bold; font-size: 18px; position: sticky; top: 0; z-index: 1000; }
+        .page { display: none; padding-bottom: 80px; animation: fadeIn 0.3s; }
         .active-page { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .balance-card { background: linear-gradient(135deg, #00d2d3, #01a3a4); padding: 25px; border-radius: 20px; text-align: center; margin-bottom: 20px; color: white; box-shadow: 0 5px 15px rgba(0,210,211,0.3); }
-        .refer-box { background: #e3f2fd; border: 1px dashed var(--accent); padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 20px; cursor: pointer; }
-        .refer-link-display { font-size: 11px; color: #0277bd; word-break: break-all; margin-top: 5px; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Products */
-        #packageList { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .square-card, .my-pkg-card { background: var(--card); border-radius: 15px; border: 1px solid var(--border); padding: 12px; text-align: center; }
-        .my-pkg-card { text-align: left; width: 100%; box-sizing: border-box; margin-bottom: 10px; border-left: 5px solid var(--accent); }
-        .buy-btn { background: var(--gold); color: white; border: none; padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .balance-card { background: linear-gradient(135deg, #00796b, #004d40); color: white; margin: 15px; padding: 25px; border-radius: 15px; text-align: center; }
+        
+        /* bKash Payment UI */
+        .payment-card { background: var(--bkash); color: white; padding: 20px; border-radius: 15px; margin: 15px; text-align: center; }
+        .payment-card input { background: white; color: black; text-align: center; font-weight: bold; }
+        .verify-btn { background: #b71c1c; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
-        /* Navbar */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border); box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-        .nav-item { text-align: center; cursor: pointer; color: #b2bec3; font-size: 10px; flex: 1; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 3px; }
-        .nav-item.active { color: var(--accent); font-weight: bold; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item { text-align: center; font-size: 11px; color: #888; cursor: pointer; flex: 1; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-item.active { color: var(--main); font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="notice-container" id="noticeBar">
-    <div class="notice-text" id="noticeMsg">অ্যাপের নোটিশ লোড হচ্ছে...</div>
-</div>
-
-<div id="authPage">
-    <div class="auth-card" id="loginBox">
-        <h2 style="color: var(--accent);">FRSH</h2>
-        <input type="text" id="loginUser" placeholder="ইউজারনেম">
-        <input type="password" id="loginPass" placeholder="পাসওয়ার্ড">
-        <button class="btn-main" id="loginBtn">লগইন</button>
-        <p onclick="toggleAuth('signup')" style="cursor:pointer; color: var(--gold); margin-top:15px;">নতুন অ্যাকাউন্ট তৈরি করুন</p>
-    </div>
-    <div class="auth-card" id="signupBox" style="display: none;">
-        <h2>রেজিস্ট্রেশন</h2>
-        <input type="text" id="regUser" placeholder="ইউজারনেম">
-        <input type="password" id="regPass" placeholder="পাসওয়ার্ড">
-        <input type="text" id="regRefer" placeholder="রেফার কোড (অটো)">
-        <button class="btn-main" id="regBtn">নিবন্ধন করুন</button>
-        <p onclick="toggleAuth('login')" style="cursor:pointer; color: var(--gold); margin-top:15px;">লগইন করুন</p>
-    </div>
-</div>
-
 <div id="mainApp">
-    <div class="header">
-        <div class="title">FRSH</div>
-        <div class="share-icon-btn" onclick="shareApp()"><i class="fas fa-share-nodes"></i></div>
-    </div>
-
+    <div class="header">FRSH WATER</div>
+    
     <div id="home" class="page active-page">
         <div class="balance-card">
-            <p style="margin:0; font-size: 14px;">ব্যালেন্স</p>
-            <h2 id="mainBalance">৳ 0.00</h2>
+            <p style="margin:0;">বর্তমান ব্যালেন্স</p>
+            <h1 id="mainBalance" style="margin:10px 0;">৳ 0.00</h1>
         </div>
-        <div class="refer-box" onclick="copyReferLink()">
-            <b><i class="fas fa-link"></i> রেফার লিঙ্ক কপি করুন</b>
-            <div class="refer-link-display" id="myReferLinkDisplay">লোড হচ্ছে...</div>
-        </div>
-        <h3>প্যাকেজসমূহ</h3>
-        <div id="packageList">লোড হচ্ছে...</div>
-    </div>
-
-    <div id="myProducts" class="page">
-        <h3>আমার পন্য ও মেয়াদ</h3>
-        <div id="myPkgList">কোন পন্য নেই।</div>
+        <div id="packageList" style="padding:15px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"></div>
     </div>
 
     <div id="deposit" class="page">
-        <div class="card-box">
-            <h3>ডিপোজিট</h3>
-            <p>বিকাশ/নগদ (Personal): 01708078333</p>
-            <select id="payMethod"><option value="bKash">bKash</option><option value="Nagad">Nagad</option></select>
+        <div class="payment-card">
+            <h3>পেমেন্ট ভেরিফাই</h3>
+            <input type="text" id="depTrx" placeholder="TrxID (ট্রানজেকশন আইডি)">
+            <div style="text-align: left; font-size: 13px; background: rgba(0,0,0,0.15); padding: 15px; border-radius: 10px; margin: 10px 0;">
+                • বিকাশ/নগদ সেন্ড মানি করুন।<br>
+                • আমাদের নম্বর: <b id="adminNum">01708078333</b> <i class="fas fa-copy" onclick="copyNum()" style="cursor:pointer; margin-left:8px;"></i><br>
+                • টাকা পাঠিয়ে TrxID টি উপরে দিন।
+            </div>
             <input type="number" id="depAmt" placeholder="টাকার পরিমাণ">
-            <input type="text" id="depTrx" placeholder="Transaction ID">
-            <button class="btn-main" id="submitDepBtn">সাবমিট</button>
+            <button class="verify-btn" id="submitDepBtn">VERIFY PAYMENT</button>
         </div>
     </div>
 
     <div id="withdraw" class="page">
-        <div class="card-box">
-            <h3>উইথড্র</h3>
-            <select id="withMethod"><option value="bKash">bKash</option><option value="Nagad">Nagad</option></select>
-            <input type="number" id="withAmt" placeholder="পরিমাণ">
-            <input type="text" id="withNum" placeholder="নম্বর">
-            <button class="btn-main" id="withBtn" style="background: var(--danger);">উইথড্র পাঠান</button>
+        <div style="padding: 20px; background: white; margin: 15px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <h3 style="text-align: center; color: var(--danger);">টাকা উত্তোলন (Withdraw)</h3>
+            <select id="withMethod">
+                <option value="bKash Personal">bKash (বিকাশ পার্সোনাল)</option>
+                <option value="Nagad Personal">Nagad (নগদ পার্সোনাল)</option>
+            </select>
+            <input type="number" id="withAmt" placeholder="মিনিমাম ১২০ টাকা">
+            <input type="text" id="withNum" placeholder="আপনার বিকাশ/নগদ নম্বর">
+            <button id="withBtn" style="background: var(--danger); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px;">রিকোয়েস্ট পাঠান</button>
         </div>
     </div>
 
     <div class="nav-bar">
-        <div id="navHome" class="nav-item active"><i class="fas fa-home"></i>Home</div>
-        <div id="navMyPkg" class="nav-item"><i class="fas fa-box"></i>My Pkg</div>
-        <div id="navDep" class="nav-item"><i class="fas fa-wallet"></i>Deposit</div>
-        <div id="navWith" class="nav-item"><i class="fas fa-money-bill"></i>Withdraw</div>
-        <div id="navLogout" class="nav-item" style="color: var(--danger);"><i class="fas fa-sign-out-alt"></i>Exit</div>
+        <div id="navHome" class="nav-item active"><i class="fas fa-home"></i><br>Home</div>
+        <div id="navDep" class="nav-item"><i class="fas fa-plus-circle"></i><br>Deposit</div>
+        <div id="navWith" class="nav-item"><i class="fas fa-wallet"></i><br>Withdraw</div>
     </div>
 </div>
 
@@ -139,155 +91,32 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    let currentUser = localStorage.getItem('loggedUser');
-    const baseAppUrl = "https://fresh-b7ec1.web.app";
+    let currentUser = localStorage.getItem('loggedUser') || "user1";
 
-    // অ্যাপ শেয়ার ফাংশন (WhatsApp, FB, Telegram)
-    window.shareApp = async () => {
-        const shareData = {
-            title: 'FRSH Earn App',
-            text: 'এই অ্যাপটি ডাউনলোড করে আপনিও প্রতিদিন আয় করুন!',
-            url: baseAppUrl
+    // Withdraw Logic
+    document.getElementById('withBtn').onclick = async () => {
+        let amt = document.getElementById('withAmt').value;
+        let num = document.getElementById('withNum').value;
+        let method = document.getElementById('withMethod').value;
+        if(amt < 120 || !num) return alert("সঠিক তথ্য দিন।");
+        
+        await push(ref(db, 'withdraws'), { user: currentUser, amount: amt, number: num, method: method, status: 'pending' });
+        alert("উইথড্র রিকোয়েস্ট সফল হয়েছে।");
+    };
+
+    // Nav Logic
+    const navs = ['navHome', 'navDep', 'navWith'];
+    const pages = ['home', 'deposit', 'withdraw'];
+    navs.forEach((n, i) => {
+        document.getElementById(n).onclick = () => {
+            pages.forEach(p => document.getElementById(p).classList.remove('active-page'));
+            navs.forEach(nav => document.getElementById(nav).classList.remove('active'));
+            document.getElementById(pages[i]).classList.add('active-page');
+            document.getElementById(n).classList.add('active');
         };
-        try {
-            if (navigator.share) {
-                await navigator.share(shareData);
-            } else {
-                window.copyAppLink();
-            }
-        } catch (err) {
-            console.log('Error sharing');
-        }
-    };
+    });
 
-    window.copyAppLink = () => {
-        const temp = document.createElement("textarea");
-        temp.value = baseAppUrl;
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand("copy");
-        document.body.removeChild(temp);
-        alert("অ্যাপ লিঙ্ক কপি হয়েছে!");
-    };
-
-    window.copyReferLink = () => {
-        const refLink = baseAppUrl + "/index.html?ref=" + currentUser;
-        const temp = document.createElement("textarea");
-        temp.value = refLink;
-        document.body.appendChild(temp);
-        temp.select();
-        document.execCommand("copy");
-        document.body.removeChild(temp);
-        alert("আপনার রেফার লিঙ্ক কপি হয়েছে!");
-    };
-
-    window.onload = () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const refCode = urlParams.get('ref');
-        if (refCode && !currentUser) {
-            toggleAuth('signup');
-            document.getElementById('regRefer').value = refCode;
-        }
-    };
-
-    window.toggleAuth = (m) => {
-        document.getElementById('loginBox').style.display = m === 'signup' ? 'none' : 'block';
-        document.getElementById('signupBox').style.display = m === 'signup' ? 'block' : 'none';
-    };
-
-    document.getElementById('regBtn').onclick = async () => {
-        let u = document.getElementById('regUser').value.trim().toLowerCase();
-        let p = document.getElementById('regPass').value.trim();
-        let r = document.getElementById('regRefer').value.trim().toLowerCase();
-        if(!u || !p) return alert("তথ্য দিন!");
-        const check = await get(ref(db, 'users/' + u));
-        if(check.exists()) return alert("ইউজারনেম ব্যস্ত!");
-        if(r && r !== u) {
-            const rs = await get(ref(db, 'users/' + r));
-            if(rs.exists()) await update(ref(db, 'users/' + r), { balance: (rs.val().balance || 0) + 10 });
-        }
-        await set(ref(db, 'users/' + u), { pass: p, balance: 5, referredBy: r });
-        alert("সফল হয়েছে! লগইন করুন।");
-        location.reload();
-    };
-
-    document.getElementById('loginBtn').onclick = async () => {
-        let u = document.getElementById('loginUser').value.trim().toLowerCase();
-        let p = document.getElementById('loginPass').value.trim();
-        const s = await get(ref(db, 'users/' + u));
-        if(s.exists() && s.val().pass === p) {
-            localStorage.setItem('loggedUser', u);
-            location.reload();
-        } else alert("ভুল তথ্য!");
-    };
-
-    if(currentUser) {
-        document.getElementById('authPage').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        document.getElementById('myReferLinkDisplay').innerText = baseAppUrl + "/index.html?ref=" + currentUser;
-        onValue(ref(db, 'app_notice'), s => { if(s.exists()) document.getElementById('noticeMsg').innerText = s.val().message; });
-        onValue(ref(db, 'users/' + currentUser), s => { if(s.exists()) document.getElementById('mainBalance').innerText = '৳ ' + (s.val().balance || 0).toFixed(2); });
-        window.buyPkg = async (price, name, days) => {
-            const snap = await get(ref(db, 'users/' + currentUser));
-            let bal = snap.val().balance || 0;
-            if(bal >= price){
-                if(confirm(name + " কিনতে চান?")){
-                    await update(ref(db, 'users/' + currentUser), { balance: bal - price });
-                    await push(ref(db, 'user_packages/' + currentUser), { name: name, buyDate: Date.now(), totalDays: parseInt(days) });
-                    alert("কেনা সফল!");
-                }
-            } else alert("ব্যালেন্স নেই!");
-        };
-        onValue(ref(db, 'user_packages/' + currentUser), s => {
-            let h = "";
-            if(s.exists()){
-                s.forEach(child => {
-                    let p = child.val();
-                    let passed = Math.floor(Math.abs(Date.now() - p.buyDate) / (1000 * 60 * 60 * 24));
-                    let left = p.totalDays - passed;
-                    h += `<div class="my-pkg-card"><b>${p.name}</b><br><small>অতিবাহিত: ${passed} দিন</small> | <small style="color:red">বাকি: ${left > 0 ? left : 0} দিন</small></div>`;
-                });
-            }
-            document.getElementById('myPkgList').innerHTML = h || "কোন পন্য নেই।";
-        });
-        onValue(ref(db, 'products'), s => {
-            let h = "";
-            if(s.exists()){
-                s.forEach(child => {
-                    let p = child.val();
-                    h += `<div class="square-card"><b>${p.name}</b><small>৳${p.price}</small><button class="buy-btn" onclick="buyPkg(${p.price}, '${p.name}', ${p.days})">কিনুন</button></div>`;
-                });
-            }
-            document.getElementById('packageList').innerHTML = h || "লোড হচ্ছে...";
-        });
-        document.getElementById('submitDepBtn').onclick = async () => {
-            let amt = document.getElementById('depAmt').value;
-            let trx = document.getElementById('depTrx').value;
-            if(amt < 100 || !trx) return alert("সঠিক তথ্য দিন!");
-            await push(ref(db, 'deposits'), { user: currentUser, amount: amt, trx: trx, method: payMethod.value, status: 'pending' });
-            alert("ডিপোজিট রিকোয়েস্ট পাঠানো হয়েছে!");
-        };
-        document.getElementById('withBtn').onclick = async () => {
-            let amt = document.getElementById('withAmt').value;
-            let num = document.getElementById('withNum').value;
-            const snap = await get(ref(db, 'users/' + currentUser));
-            if(amt < 120 || amt > snap.val().balance) return alert("ব্যালেন্স নেই!");
-            await push(ref(db, 'withdraws'), { user: currentUser, amount: amt, number: num, method: withMethod.value, status: 'pending' });
-            await update(ref(db, 'users/' + currentUser), { balance: snap.val().balance - amt });
-            alert("উইথড্র রিকোয়েস্ট সফল!");
-        };
-        const showPage = (id, el) => {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.getElementById(id).classList.add('active-page');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-        };
-        navHome.onclick = () => showPage('home', navHome);
-        navMyPkg.onclick = () => showPage('myProducts', navMyPkg);
-        navDep.onclick = () => showPage('deposit', navDep);
-        navWith.onclick = () => showPage('withdraw', navWith);
-        navLogout.onclick = () => { localStorage.clear(); location.reload(); };
-    }
+    window.copyNum = () => { navigator.clipboard.writeText("01708078333"); alert("নম্বর কপি হয়েছে!"); };
 </script>
 </body>
 </html>
