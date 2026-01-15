@@ -6,7 +6,7 @@
     <title>FRSH - Water Investment</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --bg: #f4f7f6; --main: #00796b; --white: #ffffff; --bkash: #d81b60; --danger: #e53935; --gold: #b8860b; }
+        :root { --bg: #f4f7f6; --main: #00796b; --white: #ffffff; --bkash: #d81b60; --nagad: #f44336; --danger: #e53935; --gold: #b8860b; }
         body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: var(--bg); user-select: none; }
         input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
         .header { background: var(--main); color: white; padding: 15px; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 1000; }
@@ -24,6 +24,12 @@
         .square-card { background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #eee; }
         .buy-btn { background: var(--gold); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 8px; }
         
+        /* Payment Icons */
+        .pay-box { display: flex; justify-content: space-around; margin: 20px 0; }
+        .pay-item { cursor: pointer; text-align: center; border: 2px solid transparent; padding: 10px; border-radius: 10px; transition: 0.3s; }
+        .pay-item.selected { border-color: var(--main); background: #e0f2f1; }
+        .pay-item img { width: 60px; border-radius: 10px; }
+
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
         .nav-item { text-align: center; font-size: 11px; color: #888; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--main); font-weight: bold; }
@@ -38,18 +44,18 @@
         <input type="number" id="loginPhone" placeholder="ফোন নম্বর">
         <input type="password" id="loginPass" placeholder="পাসওয়ার্ড">
         <button class="btn-auth" onclick="handleLogin()">লগইন করুন</button>
-        <p onclick="toggleAuth(false)" style="margin-top:20px; color:#555; font-size:14px;">একাউন্ট নেই? <b style="color:var(--main);">সাইনআপ করুন</b></p>
+        <p onclick="toggleAuth(false)" style="margin-top:20px; font-size:14px;">একাউন্ট নেই? <b style="color:var(--main);">সাইনআপ করুন</b></p>
     </div>
 </div>
 
 <div id="signupPage" class="page">
     <div class="auth-container">
         <h2 style="color: var(--main);">নতুন একাউন্ট</h2>
-        <input type="text" id="regName" placeholder="নাম">
+        <input type="text" id="regName" placeholder="আপনার নাম">
         <input type="number" id="regPhone" placeholder="ফোন নম্বর">
         <input type="password" id="regPass" placeholder="পাসওয়ার্ড">
         <button class="btn-auth" onclick="handleSignup()">সাইনআপ করুন</button>
-        <p onclick="toggleAuth(true)" style="margin-top:20px; color:#555; font-size:14px;">একাউন্ট আছে? <b style="color:var(--main);">লগইন করুন</b></p>
+        <p onclick="toggleAuth(true)" style="margin-top:20px; font-size:14px;">একাউন্ট আছে? <b style="color:var(--main);">লগইন করুন</b></p>
     </div>
 </div>
 
@@ -58,7 +64,7 @@
     
     <div id="home" class="page active-page">
         <div class="balance-card">
-            <p style="margin:0; opacity: 0.9;">ব্যালেন্স</p>
+            <p style="margin:0; opacity: 0.9;">মোট ব্যালেন্স</p>
             <h1 id="mainBalance">৳ 0.00</h1>
         </div>
         <h4 style="margin: 15px 0 0 20px; color: #555;">বিনিয়োগ প্যাকেজসমূহ</h4>
@@ -66,29 +72,43 @@
     </div>
 
     <div id="myPkg" class="page">
-        <h3 style="text-align: center; padding: 20px 0 10px 0;">আমার পণ্যসমূহ</h3>
+        <h3 style="text-align: center; padding: 20px;">আমার কেনা পণ্যসমূহ</h3>
         <div id="myPkgList"></div>
     </div>
 
     <div id="deposit" class="page">
-        <div style="background: var(--bkash); color: white; padding: 20px; border-radius: 15px; margin: 15px; text-align: center;">
-            <h3>ডিপোজিট করুন</h3>
-            <p>আমাদের নম্বর: <b>01708078333</b> <i class="fas fa-copy" onclick="copyNum()"></i></p>
-            <input type="text" id="depTrx" placeholder="Transaction ID (TrxID)">
-            <input type="number" id="depAmt" placeholder="টাকার পরিমাণ">
-            <button onclick="sendDep()" style="background:#b71c1c; color:white; border:none; padding:15px; width:100%; border-radius:8px; font-weight:bold;">VERIFY</button>
+        <div style="padding: 15px;">
+            <div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
+                <h3>ডিপোজিট করুন</h3>
+                <div class="pay-box">
+                    <div class="pay-item" id="btnBkash" onclick="selectDepMethod('bKash')">
+                        <img src="https://raw.githubusercontent.com/Ariful-Islam-7/bkash-nagad-icons/main/bkash.png"><br><small>বিকাশ</small>
+                    </div>
+                    <div class="pay-item" id="btnNagad" onclick="selectDepMethod('Nagad')">
+                        <img src="https://raw.githubusercontent.com/Ariful-Islam-7/bkash-nagad-icons/main/nagad.png"><br><small>নগদ</small>
+                    </div>
+                </div>
+                <div id="depDetails" style="display:none; background:#f9f9f9; padding:15px; border-radius:10px; text-align:left; margin-bottom:15px; border:1px dashed #ccc;">
+                    <p id="depMethodTitle" style="font-weight:bold; color:var(--bkash); margin:0;"></p>
+                    <p>নম্বর: <b>01708078333</b> <i class="fas fa-copy" onclick="copyNum()"></i></p>
+                    <small>* এই নম্বরে সেন্ড মানি করে TrxID দিন।</small>
+                </div>
+                <input type="number" id="depAmt" placeholder="টাকার পরিমাণ">
+                <input type="text" id="depTrx" placeholder="Transaction ID (TrxID)">
+                <button onclick="sendDep()" style="background:var(--main); color:white; border:none; padding:15px; width:100%; border-radius:8px; font-weight:bold;">নিশ্চিত করুন</button>
+            </div>
         </div>
     </div>
 
     <div id="withdraw" class="page">
-        <div style="padding: 20px; background: white; margin: 15px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-            <h3 style="text-align: center; color: var(--danger);">উইথড্র</h3>
+        <div style="padding: 20px; background: white; margin: 15px; border-radius: 15px;">
+            <h3 style="text-align: center; color: var(--danger);">উইথড্র (Withdraw)</h3>
             <select id="withMethod">
                 <option value="bKash">bKash (বিকাশ)</option>
                 <option value="Nagad">Nagad (নগদ)</option>
             </select>
             <input type="number" id="withAmt" placeholder="মিনিমাম ১২০ টাকা">
-            <input type="text" id="withNum" placeholder="বিকাশ/নগদ নম্বর">
+            <input type="text" id="withNum" placeholder="নম্বর দিন">
             <button onclick="sendWith()" style="background:var(--danger); color:white; border:none; padding:15px; width:100%; border-radius:8px; font-weight:bold;">রিকোয়েস্ট পাঠান</button>
         </div>
     </div>
@@ -118,8 +138,9 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     let currentUser = localStorage.getItem('loggedUser');
+    let selectedDepMethod = "";
 
-    // Auth logic
+    // Auth functions
     window.toggleAuth = (isLogin) => {
         document.getElementById('loginPage').style.display = isLogin ? 'block' : 'none';
         document.getElementById('signupPage').style.display = isLogin ? 'none' : 'block';
@@ -134,7 +155,7 @@
         const snap = await get(userRef);
         if(snap.exists()) return alert("এই নম্বরে অ্যাকাউন্ট আছে");
         await set(userRef, { name, phone, pass, balance: 0 });
-        alert("সাইনআপ সফল! লগইন করুন।");
+        alert("সফল! লগইন করুন।");
         toggleAuth(true);
     };
 
@@ -145,17 +166,20 @@
         if(snap.exists() && snap.val().pass === pass){
             localStorage.setItem('loggedUser', phone);
             location.reload();
-        } else { alert("ভুল নম্বর বা পাসওয়ার্ড"); }
+        } else { alert("ভুল তথ্য!"); }
     };
 
     window.logout = () => { localStorage.removeItem('loggedUser'); location.reload(); };
 
-    // Initialize App
+    // App Initialization
     if(currentUser){
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
 
-        // ১. হোমে প্যাকেজ এবং মেয়াদ দেখানো
+        onValue(ref(db, 'users/' + currentUser), s => {
+            if(s.exists()) document.getElementById('mainBalance').innerText = '৳' + s.val().balance.toFixed(2);
+        });
+
         onValue(ref(db, 'products'), (snapshot) => {
             let html = "";
             snapshot.forEach((child) => {
@@ -170,15 +194,9 @@
                     <button class="buy-btn" onclick="buyPkg('${child.key}', ${p.price}, '${p.name}', ${p.daily}, ${p.days})">কিনুন</button>
                 </div>`;
             });
-            document.getElementById('packageList').innerHTML = html || "কোন প্যাকেজ নেই";
+            document.getElementById('packageList').innerHTML = html || "প্যাকেজ নেই";
         });
 
-        // ২. ব্যালেন্স আপডেট
-        onValue(ref(db, 'users/' + currentUser), s => {
-            if(s.exists()) document.getElementById('mainBalance').innerText = '৳' + s.val().balance.toFixed(2);
-        });
-
-        // ৩. আমার পণ্য এবং বাকি দিন
         onValue(ref(db, 'user_packages/' + currentUser), (s) => {
             let html = "";
             let now = Date.now();
@@ -192,33 +210,41 @@
                         <span style="color:var(--main);">৳${p.daily}/দিন</span>
                     </div>
                     <div style="font-size:11px; color:#777; margin-top:5px;">
-                        মোট মেয়াদ: ${p.days} দিন | <b style="color:green;">বাকি: ${daysLeft > 0 ? daysLeft : 0} দিন</b>
+                        বাকি: <b style="color:green;">${daysLeft > 0 ? daysLeft : 0} দিন</b>
                     </div>
                 </div>`;
             });
-            document.getElementById('myPkgList').innerHTML = html || "<p style='text-align:center;'>কেনা নেই</p>";
+            document.getElementById('myPkgList').innerHTML = html || "<p style='text-align:center;'>কিছু কেনা নেই</p>";
         });
     }
 
-    // Functions
-    window.buyPkg = async (id, price, name, daily, days) => {
-        const userRef = ref(db, 'users/' + currentUser);
-        const snap = await get(userRef);
-        let balance = snap.val().balance || 0;
-        if(balance < price) return alert("ব্যালেন্স নেই");
-        if(confirm(name + " কিনতে চান?")){
-            await update(userRef, { balance: balance - price });
-            await push(ref(db, 'user_packages/' + currentUser), { name, daily, days, buyDate: Date.now(), lastClaim: Date.now() });
-            alert("সফল!");
-        }
+    // Functional Logic
+    window.selectDepMethod = (method) => {
+        selectedDepMethod = method;
+        document.getElementById('depDetails').style.display = 'block';
+        document.getElementById('depMethodTitle').innerText = method + " (Personal)";
+        document.querySelectorAll('.pay-item').forEach(i => i.classList.remove('selected'));
+        document.getElementById('btn' + method).classList.add('selected');
     };
 
     window.sendDep = async () => {
         let amt = document.getElementById('depAmt').value;
         let trx = document.getElementById('depTrx').value;
-        if(!amt || !trx) return alert("তথ্য দিন");
-        await push(ref(db, 'deposits'), { user: currentUser, amount: amt, trx: trx, status: 'pending', date: Date.now() });
-        alert("পাঠানো হয়েছে");
+        if(!selectedDepMethod || !amt || !trx) return alert("সব তথ্য দিন");
+        await push(ref(db, 'deposits'), { user: currentUser, amount: amt, trx: trx, method: selectedDepMethod, status: 'pending', date: Date.now() });
+        alert("পাঠানো হয়েছে!");
+        location.reload();
+    };
+
+    window.buyPkg = async (id, price, name, daily, days) => {
+        const userRef = ref(db, 'users/' + currentUser);
+        const snap = await get(userRef);
+        if((snap.val().balance || 0) < price) return alert("ব্যালেন্স নেই");
+        if(confirm(name + " কিনবেন?")){
+            await update(userRef, { balance: snap.val().balance - price });
+            await push(ref(db, 'user_packages/' + currentUser), { name, daily, days, buyDate: Date.now(), lastClaim: Date.now() });
+            alert("সফল!");
+        }
     };
 
     window.sendWith = async () => {
@@ -226,15 +252,14 @@
         let num = document.getElementById('withNum').value;
         let method = document.getElementById('withMethod').value;
         const snap = await get(ref(db, 'users/' + currentUser));
-        if(amt < 120) return alert("মিনিমাম ১২০ টাকা");
-        if(amt > snap.val().balance) return alert("ব্যালেন্স নেই");
-        await push(ref(db, 'withdraws'), { user: currentUser, amount: amt, number: num, method: method, status: 'pending', date: Date.now() });
+        if(amt < 120 || amt > snap.val().balance) return alert("ভুল পরিমাণ!");
+        await push(ref(db, 'withdraws'), { user: currentUser, amount: amt, number: num, method, status: 'pending', date: Date.now() });
         await update(ref(db, 'users/' + currentUser), { balance: snap.val().balance - amt });
         alert("সফল!");
     };
 
     window.showTab = (id, el) => {
-        document.querySelectorAll('#mainApp .page').forEach(p => p.classList.remove('active-page'));
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById(id).classList.add('active-page');
         el.classList.add('active');
