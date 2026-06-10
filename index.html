@@ -1421,6 +1421,1276 @@
 
     </script> </body> 
 </html>
+                </div> 
+                <div class="input-group"> 
+                    <label>রেফারেল কোড</label> 
+                    <div class="input-wrapper"><i class="fas fa-gift" style="color:var(--primary)"></i><input type="text" id="r-ref" placeholder="কোড (ঐচ্ছিক)"></div> 
+                </div> 
+                <button class="btn-main" onclick="processRegister()">একাউন্ট খুলুন</button> 
+            </div> 
+        </div> 
+    </div> 
+
+    <!-- Main Dashboard -->
+    <div id="main-dashboard" class="hidden"> 
+        <div class="app-shell"> 
+            <div class="top-bar"> 
+                <div class="brand-logo" style="color:var(--primary); font-size: 22px;">Z999</div> 
+                <i class="fas fa-headset" id="help-btn" style="color:var(--accent); font-size: 20px; cursor: pointer;" onclick="nav('help')"></i> 
+            </div> 
+            
+            <div id="home-page" class="page active"> 
+                <div class="slider-container"> 
+                    <div class="hero-banner" id="slider"></div> 
+                    <div class="slider-dots" id="slider-dots"></div>
+                </div> 
+                <div id="offer-container"></div>
+                <!-- DYNAMIC GAME GRID -->
+                <div class="game-grid" id="dynamic-game-grid">
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748b;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 30px; margin-bottom: 10px;"></i>
+                        <p>গেম লোড হচ্ছে...</p>
+                    </div>
+                </div>
+            </div> 
+
+            <!-- UPDATED DEPOSIT PAGE (Amount Selection Only) -->
+            <div id="deposit-page" class="page"> 
+                <div style="padding:20px;"><h3>💰 টাকা জমা করুন</h3></div>
+                
+                <div style="background:#1e293b; margin: 0 20px 20px; padding: 20px; border-radius: 15px; border: 1px solid #334155;">
+                    
+                    <div class="input-group" style="margin: 0 0 15px;"> 
+                        <label>কত টাকা জমা দিবেন?</label> 
+                        <div class="input-wrapper">
+                            <span style="font-weight:700; color:var(--accent)">৳</span>
+                            <input type="number" id="dep-amount-input" placeholder="পরিমাণ লিখুন (যেমন: 500)">                        </div> 
+                    </div>
+
+                    <button class="btn-main" onclick="goToPaymentGateway()" style="width:100%; margin:0; display:block; text-align:center; text-decoration:none;">
+                        <i class="fas fa-external-link-alt"></i> পেমেন্ট গেটওয়েতে যান
+                    </button>
+                </div>
+
+                <div style="background:#1e293b; margin: 0 20px 20px; padding: 20px; border-radius: 15px; border: 1px solid #334155; text-align: center;">
+                    <p style="color: #94a3b8; font-size: 13px; line-height: 1.6;">
+                        ✅ বাটনে ক্লিক করলে পেমেন্ট সাইট ওপেন হবে।<br>
+                        ⚠️ সেখানে টাকা পাঠানোর পর TrxID দিলে অটোমেটিক অ্যাডমিনে চলে যাবে।
+                    </p>
+                </div>
+            </div> 
+
+            <div id="withdraw-page" class="page"> 
+                <div style="padding:20px;"><h3>টাকা উত্তোলন</h3></div> 
+                <div id="saved-wallet-display" class="saved-wallet-box" style="display:none;">
+                    <div><div style="font-size:12px; color:#94a3b8">সেভ করা নাম্বার (<span id="saved-method-text">Bkash</span>)</div><div style="font-weight:bold" id="saved-num-text">...</div></div>
+                    <div style="color:var(--accent); font-size:12px; cursor:pointer" onclick="toggleWalletEdit(true)">পরিবর্তন</div>
+                </div>
+                <div id="wallet-edit-form">
+                    <div class="input-group"> 
+                        <label>পদ্ধতি নির্বাচন করুন</label> 
+                        <div style="display:flex; gap:12px; padding: 0 25px;"> 
+                            <div class="method-item active" id="w-bkash" onclick="setWithM('bkash')"><img src="https://files.catbox.moe/hws19h.jpeg"></div> 
+                            <div class="method-item" id="w-nagad" onclick="setWithM('nagad')"><img src="https://i.ibb.co.com/wFpxNjxX/images-4.jpg"></div> 
+                        </div> 
+                    </div> 
+                    <div class="input-group"> 
+                        <label>নাম্বার</label> 
+                        <div class="input-wrapper"><input type="text" id="w-num" placeholder="01XXX-XXXXXX"></div> 
+                    </div> 
+                    <button class="btn-main" style="background:#334155; margin-bottom:20px;" onclick="saveWalletInfo()">💾 নাম্বার সেভ করুন</button>
+                </div>
+                <div class="input-group"> 
+                    <label>টাকার পরিমাণ</label> 
+                    <div class="input-wrapper"><span style="font-weight:700; color:var(--accent)">৳</span><input type="number" id="w-amt" placeholder="১০.০০"></div>                 </div> 
+                <div class="input-group"> 
+                    <label>পাসওয়ার্ড</label> 
+                    <div class="input-wrapper"><i class="fas fa-lock" style="color:var(--primary)"></i><input type="password" id="w-pass" placeholder="লগইন পাসওয়ার্ড দিন"></div> 
+                </div> 
+                <button class="btn-main" onclick="submitWith()">টাকা উত্তোলন করুন</button> 
+            </div> 
+
+            <div id="gift-page" class="page"> 
+                <div style="padding:20px;"><h3>🎁 গিফট কোড</h3></div> 
+                <div class="gift-input-box">
+                    <p style="color:#94a3b8; margin-bottom:15px; font-size:13px;">গিফট কোড লিখে বাটন চাপুন</p>                    <input type="text" id="gift-code-input" style="width:100%; padding:15px; background:#0f172a; border:1px solid #334155; border-radius:12px; color:white; margin-bottom:15px; text-align:center; text-transform:uppercase;">
+                    <button class="btn-main" onclick="claimGiftCode()" style="width:100%; margin:0;">কোড ব্যবহার করুন</button>
+                </div>
+                <div class="gift-history">                    <h4 style="margin-bottom:15px; color:#94a3b8;">ইতিহাস</h4>
+                    <div id="gift-history-list"></div>
+                </div>
+            </div>
+            <div id="help-page" class="page">                 <div style="padding:20px;"><h3>📞 সাপোর্ট সেন্টার</h3></div> 
+                <div class="uid-display">
+                    <div style="font-size: 12px; color: #94a3b8;">আপনার ইউনিক UID</div>
+                    <span id="help-uid">...</span>
+                    <div style="margin-top: 10px;">
+                        <button class="btn-main" style="padding: 8px 20px; font-size: 12px; width: auto; margin: 0;" onclick="copyUID()">📋 UID কপি করুন</button>
+                    </div>
+                </div>
+                <div class="help-card">
+                    <h4>📩 নতুন টিকিট তৈরি করুন</h4>
+                    <div class="input-group" style="margin: 0 0 15px;">
+                        <label>সমস্যার ধরন</label>
+                        <div class="input-wrapper">
+                            <select id="ticket-type" style="width: 100%;">
+                                <option value="deposit">💰 ডিপোজিট সমস্যা</option>
+                                <option value="withdraw">💸 উত্তোলন সমস্যা</option>
+                                <option value="game">🎮 গেম সমস্যা</option>
+                                <option value="account">👤 অ্যাকাউন্ট সমস্যা</option>
+                                <option value="other">📌 অন্যান্য</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group" style="margin: 0 0 15px;">
+                        <label>বিস্তারিত লিখুন</label>
+                        <div class="input-wrapper">
+                            <textarea id="ticket-message" rows="4" placeholder="আপনার সমস্যার বিস্তারিত বর্ণনা দিন..." style="width: 100%; resize: none;"></textarea>
+                        </div>
+                    </div>
+                    <button class="btn-main" onclick="submitTicket()" style="width:100%; margin:0;">📩 টিকিট পাঠান</button>
+                </div>
+                <div style="padding: 0 20px;">                    <h4 style="margin-bottom: 15px; color: #94a3b8;">📋 আমার টিকিটসমূহ</h4>
+                    <div id="my-tickets-list"></div>
+                </div>
+            </div>
+
+            <div id="account-page" class="page"> 
+                <div class="balance-card"> 
+                    <div style="display:flex; justify-content:space-between; align-items:center;"> 
+                        <div><p>মূল ব্যালেন্স</p><h1 id="user-bal" style="color: var(--accent);">৳ 0.00</h1></div> 
+                        <i class="fas fa-sync-alt" onclick="refreshBalance()" style="cursor: pointer; color:var(--primary)"></i> 
+                    </div> 
+                    <p style="margin-top:10px; font-size:12px; opacity:0.7;">UID: <span id="uid-gen" style="color: var(--accent); font-weight: bold;">...</span></p> 
+                </div>                 <div style="background:#1e293b; margin:15px; border-radius:25px; overflow:hidden;">                     <div style="padding:18px 25px; border-bottom:1px solid #334155; cursor: pointer;" onclick="nav('deposit')"><i class="fas fa-wallet" style="color:var(--success); width:25px;"></i> টাকা জমা দিন</div> 
+                    <div style="padding:18px 25px; border-bottom:1px solid #334155; cursor: pointer;" onclick="nav('gift')"><i class="fas fa-gift" style="color:var(--primary); width:25px;"></i> গিফট কোড</div> 
+                    <div style="padding:18px 25px; border-bottom:1px solid #334155; cursor: pointer;" onclick="nav('help')"><i class="fas fa-headset" style="color:var(--accent); width:25px;"></i> সাপোর্ট / হেল্প</div> 
+                    <div style="padding:18px 25px; border-bottom:1px solid #334155; cursor: pointer;" onclick="nav('withdraw')"><i class="fas fa-money-bill-wave" style="color:#e67e22; width:25px;"></i> টাকা উত্তোলন</div>                     
+                    <div style="padding:18px 25px; color:var(--danger); cursor: pointer;" onclick="logout()"><i class="fas fa-sign-out-alt" style="width:25px;"></i> <b>লগআউট</b></div> 
+                </div>             </div> 
+
+            <div class="nav-bar"> 
+                <div class="nav-item active" id="n-home" onclick="nav('home')"><i class="fas fa-home"></i>হোম</div> 
+                <div class="nav-item" id="n-deposit" onclick="nav('deposit')"><i class="fas fa-wallet"></i>ডিপোজিট</div> 
+                <div class="nav-center" onclick="nav('agency')"><i class="fas fa-users"></i></div> 
+                <div class="nav-item" id="n-withdraw" onclick="nav('withdraw')"><i class="fas fa-money-bill"></i>উত্তোলন</div> 
+                <div class="nav-item" id="n-account" onclick="nav('account')"><i class="fas fa-user-circle"></i>প্রোফাইল</div> 
+            </div> 
+        </div> 
+    </div>
+
+    <!-- SUPER ACE GAME OVERLAY (Integrated) -->
+    <div id="superace-game" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:2000; overflow:hidden;">
+        <style>
+            /* Super Ace Specific Styles scoped to overlay */
+            #superace-game * { user-select:none; -webkit-tap-highlight-color:transparent; outline:none; margin:0; padding:0; box-sizing:border-box; font-family:'Arial', sans-serif; }
+            .sa-phone { width:100%; max-width:450px; height:100vh; margin:0 auto; background:#1a0f0a; position:relative; overflow:hidden; display:flex; flex-direction:column; }
+            .sa-browser-bar { background:#2d2d2d; padding:8px 12px; display:flex; align-items:center; gap:10px; font-size:12px; color:#ddd; flex-shrink:0; z-index:10; }
+            .sa-browser-bar .url { flex:1; background:#424242; padding:6px 10px; border-radius:15px; font-size:11px; display:flex; align-items:center; gap:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+            .sa-browser-bar .tabs { background:#424242; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; }
+            .sa-header { background:linear-gradient(to bottom, #1a3a5c, #0f2540); padding:10px 12px; display:flex; align-items:center; justify-content:space-between; border-bottom:2px solid #000; flex-shrink:0; z-index:10; }
+            .sa-balance-pill { background:linear-gradient(to right, #1565c0, #0d47a1); padding:6px 14px; border-radius:20px; display:flex; align-items:center; gap:6px; border:1px solid #ffd700; color:#fff; font-weight:bold; font-size:14px; box-shadow:0 2px 5px rgba(0,0,0,0.5); }
+            .sa-coin { width:22px; height:22px; background:radial-gradient(circle at 30% 30%, #fff59d, #f9a825); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:bold; color:#5d4037; border:2px solid #e65100; }
+            .sa-header-actions { display:flex; gap:8px; }
+            .sa-header-actions .btn { width:28px; height:28px; border-radius:50%; background:#1565c0; border:1px solid #ffd700; color:#fff; display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; }
+            .sa-game-area { flex:1; display:flex; flex-direction:column; position:relative; min-height:0; background: radial-gradient(ellipse at center, #2d5a3d 0%, #1a3d2a 60%, #0d2818 100%); }
+            .sa-wood-frame-top { height:90px; flex-shrink:0; background: repeating-linear-gradient(90deg, #3e2723 0px, #5d4037 2px, #4e342e 4px, #3e2723 6px), linear-gradient(to bottom, #4e342e, #2e1c15); position:relative; box-shadow:inset 0 -5px 10px rgba(0,0,0,0.5), 0 5px 10px rgba(0,0,0,0.5); }
+            .sa-jili-badge { position:absolute; left:-5px; top:20px; background:linear-gradient(to bottom, #ffd700, #b8860b); color:#000; font-weight:bold; font-size:11px; padding:4px 8px; border-radius:4px; transform:rotate(-90deg); transform-origin:left top; border:2px solid #8b6914; z-index:5; letter-spacing:1px; }
+            .sa-buy-bonus { position:absolute; right:10px; top:10px; z-index:10; cursor:pointer; animation:bonusPulse 1.5s infinite; }
+            .sa-buy-bonus .circle { width:65px; height:65px; border-radius:50%; background:radial-gradient(circle at 30% 30%, #ff5252, #b71c1c); border:3px solid #ffd700; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#ffd700; font-weight:bold; font-size:13px; line-height:1.1; box-shadow:0 0 15px rgba(255,0,0,0.7), inset 0 0 10px rgba(0,0,0,0.3); text-shadow:1px 1px 2px #000; }
+            @keyframes bonusPulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.08);} }            .sa-title-section { text-align:center; padding:8px 10px 0; flex-shrink:0; }
+            .sa-game-title { font-family:'Impact', 'Arial Black', sans-serif; font-size:40px; font-weight:900; background:linear-gradient(to bottom, #fff 0%, #ffd700 50%, #b8860b 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(2px 2px 0 #000); letter-spacing:2px; margin-bottom:5px; }
+            .sa-multiplier-bar { background:linear-gradient(to bottom, #ffd54f, #f9a825, #f57f17); border-radius:25px; padding:6px 15px; display:inline-flex; gap:15px; margin:0 auto; border:2px solid #5d4037; box-shadow:0 3px 8px rgba(0,0,0,0.5), inset 0 2px 3px rgba(255,255,255,0.4); }
+            .sa-mult { font-family:'Impact', sans-serif; font-size:22px; font-weight:bold; color:#3e2723; transition:all 0.3s; }
+            .sa-mult.active { color:#ff1744; font-size:26px; text-shadow:0 0 8px #ffeb3b; transform:scale(1.1); }
+            .sa-sub-text { color:#fff; font-size:13px; margin-top:6px; text-shadow:1px 1px 3px #000; font-weight:bold; }
+            .sa-sub-text .green { color:#76ff03; }
+            .sa-accelerator-counter { background:linear-gradient(to bottom, #2e1c15, #1a0f0a); border:2px solid #ffd700; border-radius:15px; padding:8px 15px; margin:8px auto; display:flex; align-items:center; gap:10px; box-shadow:0 3px 10px rgba(0,0,0,0.5); max-width:300px; }
+            .sa-accelerator-counter .icon { width:40px; height:40px; background:radial-gradient(circle, #ff1744, #b71c1c); border-radius:50%; border:2px solid #ffd700; display:flex; align-items:center; justify-content:center; font-size:24px; animation:iconPulse 2s infinite; }
+            @keyframes iconPulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+            .sa-accelerator-counter .text { color:#ffd700; font-weight:bold; font-size:14px; }
+            .sa-accelerator-counter .count { font-family:'Impact', sans-serif; font-size:24px; color:#fff; text-shadow:0 0 10px #ff1744; }            .sa-accelerator-counter.ready { animation:readyPulse 1s infinite; border-color:#76ff03; }
+            @keyframes readyPulse { 0%,100%{box-shadow:0 0 20px #76ff03;} 50%{box-shadow:0 0 40px #76ff03;} }
+            .sa-slot-container { flex:1; padding:10px; display:flex; flex-direction:column; justify-content:center; min-height:0; }            .sa-slot-frame { background:linear-gradient(to bottom, #8d6e63, #5d4037); padding:8px; border-radius:10px; box-shadow:inset 0 0 15px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.5); height:100%; display:flex; flex-direction:column; }
+            .sa-slot-grid { display:grid; grid-template-columns:repeat(5, 1fr); grid-template-rows:repeat(4, 1fr); gap:4px; background:#0d2818; padding:6px; border-radius:6px; flex:1; }
+            .sa-card { background:linear-gradient(135deg, #fff 0%, #e0e0e0 100%); border-radius:6px; position:relative; overflow:hidden; box-shadow:0 2px 4px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.1); display:flex; align-items:center; justify-content:center; transition:all 0.3s; }
+            .sa-card.spinning { animation:spinCard 0.15s linear infinite; }            @keyframes spinCard { 0%{transform:translateY(-4px);opacity:0.7;} 100%{transform:translateY(4px);opacity:1;} }
+            .sa-card.breaking { animation:breakCard 0.5s ease-out forwards; }
+            @keyframes breakCard { 0%{transform:scale(1);opacity:1;} 50%{transform:scale(1.2) rotate(10deg);opacity:0.5;} 100%{transform:scale(0) rotate(180deg);opacity:0;} }
+            .sa-card.new-card { animation:newCard 0.4s ease-out; }
+            @keyframes newCard { 0%{transform:translateY(-50px);opacity:0;} 100%{transform:translateY(0);opacity:1;} }
+            .sa-card.accelerator-card { background:radial-gradient(circle, #ff1744, #b71c1c); border:3px solid #ffd700; box-shadow:0 0 20px rgba(255,23,68,0.8); animation:accelCardPulse 1s infinite; }
+            @keyframes accelCardPulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+            .sa-card-rank { position:absolute; top:3px; left:5px; font-family:'Arial Black', sans-serif; font-weight:900; font-size:14px; color:#222; z-index:2; }
+            .sa-card-sym { width:85%; height:85%; display:flex; align-items:center; justify-content:center; z-index:1; }
+            .sa-win-display { text-align:center; padding:10px 0 5px; flex-shrink:0; font-family:'Arial Black', sans-serif; font-size:22px; font-weight:900; color:#ffd700; text-shadow:2px 2px 0 #000, 0 0 10px rgba(255,215,0,0.5); letter-spacing:1px; }
+            .sa-win-display .amount { color:#fff; margin-left:10px; }
+            .sa-controls { background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), radial-gradient(ellipse at center, #1a3d2a 0%, #0d2818 100%); padding:10px 15px 15px; border-top:3px solid #5d4037; flex-shrink:0; z-index:20; }
+            .sa-controls-row { display:flex; justify-content:space-around; align-items:center; margin-bottom:8px; }
+            .sa-ctrl-btn { width:50px; height:50px; border-radius:50%; border:none; background:radial-gradient(circle at 30% 30%, #8d6e63, #4e342e); color:#fff; font-size:22px; cursor:pointer; box-shadow:0 4px 0 #2e1c15, 0 5px 10px rgba(0,0,0,0.5), inset 0 2px 3px rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; transition:transform 0.1s; }
+            .sa-ctrl-btn:active { transform:translateY(3px); box-shadow:0 1px 0 #2e1c15; }
+            .sa-ctrl-btn svg { width:28px; height:28px; }
+            .sa-spin-btn { width:85px; height:85px; background:radial-gradient(circle at 30% 30%, #fff59d, #f9a825, #e65100); border:4px solid #fff; box-shadow:0 0 20px #ffd700, 0 6px 0 #bf360c, 0 8px 15px rgba(0,0,0,0.5); font-family:'Impact', sans-serif; font-size:20px; font-weight:900; color:#5d4037; text-shadow:1px 1px 0 rgba(255,255,255,0.5); animation:spinBtnGlow 2s infinite alternate; }
+            @keyframes spinBtnGlow { from{box-shadow:0 0 15px #ffd700,0 6px 0 #bf360c;} to{box-shadow:0 0 30px #ffeb3b,0 6px 0 #bf360c;} }
+            .sa-spin-btn:active { transform:translateY(4px); box-shadow:0 0 15px #ffd700, 0 2px 0 #bf360c; }
+            .sa-spin-btn.spinning { animation:spinRotate 0.5s linear infinite; }
+            @keyframes spinRotate { from{transform:rotate(0);} to{transform:rotate(360deg);} }
+            .sa-bet-row { display:flex; justify-content:space-between; align-items:center; font-size:13px; color:#fff; font-weight:bold; text-shadow:1px 1px 2px #000; }
+            .sa-bet-label { color:#ffd700; cursor:pointer; text-decoration:underline; }
+            .sa-autoplay-hint { color:#aaa; font-size:11px; font-style:italic; }
+            .sa-balance-row { text-align:center; margin-top:5px; font-size:16px; font-weight:bold; color:#ffd700; text-shadow:1px 1px 2px #000; }
+            .sa-version { position:absolute; bottom:3px; left:8px; font-size:10px; color:#666; z-index:5; }
+            .sa-firebase-status { position:absolute; top:3px; right:8px; font-size:10px; z-index:5; display:flex; align-items:center; gap:4px; }
+            .sa-firebase-status .dot { width:8px; height:8px; border-radius:50%; background:#f44336; animation:blink 1s infinite; }
+            .sa-firebase-status.connected .dot { background:#4caf50; animation:none; }
+            .sa-firebase-status span { color:#888; }
+            @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+            .sa-bet-modal-overlay { position:absolute; bottom:0; left:0; right:0; top:0; background:rgba(0,0,0,0.85); z-index:100; display:none; align-items:flex-end; justify-content:center; }
+            .sa-bet-modal-overlay.show { display:flex; }            .sa-bet-modal { background:linear-gradient(to bottom, #5d4037, #2e1c15); border:3px solid #ffd700; border-radius:15px 15px 0 0; padding:20px; width:100%; max-width:450px; color:#fff; box-shadow:0 0 30px rgba(255,215,0,0.5); animation:slideUp 0.3s ease-out; }
+            @keyframes slideUp { from{transform:translateY(100%);} to{transform:translateY(0);} }
+            .sa-bet-modal h3 { color:#ffd700; margin-bottom:15px; text-align:center; font-size:18px; text-transform:uppercase; }
+            .sa-bet-options { display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin-bottom:15px; }
+            .sa-bet-opt { background:linear-gradient(to bottom, #ffd700, #b8860b); color:#000; border:none; padding:12px; border-radius:10px; font-weight:bold; font-size:14px; cursor:pointer; box-shadow:0 3px 0 #5d4037; transition:all 0.2s; }
+            .sa-bet-opt:active { transform:translateY(2px); box-shadow:0 1px 0 #5d4037; }
+            .sa-bet-opt.selected { background:linear-gradient(to bottom, #76ff03, #2e7d32); color:#fff; box-shadow:0 0 10px #76ff03; }
+            .sa-close-bet { width:100%; background:#4e342e; color:#fff; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:14px; }
+            .sa-modal-overlay { position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:100; display:none; align-items:center; justify-content:center; }
+            .sa-modal-overlay.show { display:flex; }            .sa-modal { background:linear-gradient(to bottom, #5d4037, #2e1c15); border:3px solid #ffd700; border-radius:15px; padding:20px; width:85%; max-width:320px; text-align:center; color:#fff; box-shadow:0 0 30px rgba(255,215,0,0.5); }
+            .sa-modal h3 { color:#ffd700; margin-bottom:15px; font-size:20px; }
+            .sa-modal-row { display:flex; justify-content:space-between; margin:10px 0; font-size:14px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; }
+            .sa-modal-btn { background:linear-gradient(to bottom, #ffd700, #b8860b); color:#000; border:none; padding:10px 25px; border-radius:20px; font-weight:bold; font-size:14px; margin-top:15px; cursor:pointer; box-shadow:0 3px 0 #5d4037; }
+            .sa-modal-btn:active { transform:translateY(2px); box-shadow:0 1px 0 #5d4037; }
+            .sa-win-popup { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:radial-gradient(circle, #ffd700, #f57f17); border:4px solid #fff; border-radius:20px; padding:20px 40px; text-align:center; z-index:50; display:none; box-shadow:0 0 50px rgba(255,215,0,0.8); animation:winPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }            @keyframes winPop { 0%{transform:translate(-50%,-50%) scale(0);} 70%{transform:translate(-50%,-50%) scale(1.2);} 100%{transform:translate(-50%,-50%) scale(1);} }
+            .sa-win-popup.show { display:block; }            .sa-win-popup .big { font-family:'Impact', sans-serif; font-size:40px; color:#fff; text-shadow:2px 2px 0 #000; margin-bottom:5px; }
+            .sa-win-popup .amt { font-size:24px; font-weight:bold; color:#fff; text-shadow:1px 1px 0 #000; }
+            .sa-free-spins-banner { position:absolute; top:100px; left:50%; transform:translateX(-50%); background:linear-gradient(to right, #ff1744, #d50000); border:3px solid #ffd700; border-radius:15px; padding:10px 20px; color:#fff; font-weight:bold; box-shadow:0 0 30px rgba(255,23,68,0.8); display:none; z-index:25; text-align:center; animation:bannerPulse 1s infinite alternate; min-width:200px; }
+            @keyframes bannerPulse { from{transform:translateX(-50%) scale(1);} to{transform:translateX(-50%) scale(1.05);} }
+            .sa-free-spins-banner.show { display:block; }
+            .sa-free-spins-banner .label { font-size:14px; letter-spacing:2px; }
+            .sa-free-spins-banner .count { font-size:36px; font-family:'Impact', sans-serif; color:#ffd700; text-shadow:2px 2px 0 #000; }
+            .sa-free-spins-banner .sub { font-size:11px; color:#fff; opacity:0.9; }
+            .sa-accel-activation { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:radial-gradient(circle, #ff1744, #b71c1c); border:5px solid #ffd700; border-radius:20px; padding:30px 50px; text-align:center; z-index:60; display:none; box-shadow:0 0 60px rgba(255,23,68,0.9); animation:activPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+            @keyframes activPop { 0%{transform:translate(-50%,-50%) scale(0);} 70%{transform:translate(-50%,-50%) scale(1.3);} 100%{transform:translate(-50%,-50%) scale(1);} }
+            .sa-accel-activation.show { display:block; }
+            .sa-accel-activation .title { font-family:'Impact', sans-serif; font-size:36px; color:#ffd700; text-shadow:2px 2px 0 #000; margin-bottom:10px; }
+            .sa-accel-activation .desc { font-size:20px; color:#fff; text-shadow:1px 1px 0 #000; }
+            .sa-free-spins-end { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:radial-gradient(circle, #1565c0, #0d47a1); border:5px solid #ffd700; border-radius:20px; padding:30px 50px; text-align:center; z-index:60; display:none; box-shadow:0 0 60px rgba(21,101,192,0.9); animation:activPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+            @keyframes activPop { 0%{transform:translate(-50%,-50%) scale(0);} 70%{transform:translate(-50%,-50%) scale(1.3);} 100%{transform:translate(-50%,-50%) scale(1);} }
+            .sa-free-spins-end.show { display:block; }
+            .sa-free-spins-end .title { font-family:'Impact', sans-serif; font-size:32px; color:#ffd700; text-shadow:2px 2px 0 #000; margin-bottom:10px; }
+            .sa-free-spins-end .desc { font-size:16px; color:#fff; text-shadow:1px 1px 0 #000; margin-bottom:5px; }
+            .sa-free-spins-end .total { font-size:24px; color:#76ff03; font-weight:bold; }
+            
+            /* Exit Button for Game */
+            .sa-exit-btn {
+                position: absolute; top: 10px; left: 10px; z-index: 200;
+                background: rgba(255, 0, 0, 0.8); color: white; border: none;
+                padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            }
+        </style>
+
+        <div class="sa-phone">
+            <button class="sa-exit-btn" onclick="closeGame()">✕ বের হোন</button>
+            
+            <div class="sa-browser-bar">
+                <span></span>                <div class="url"> dkwwin.com/login/</div>
+                <div class="tabs">2</div>
+                <span>⋮</span>
+            </div>
+
+            <div class="sa-header">
+                <div style="color:#fff;font-size:20px;cursor:pointer;">‹</div>
+                <div class="sa-balance-pill">
+                    <div class="sa-coin">$</div>                    <span id="sa-headerBal">৳0.00</span>
+                </div>
+                <div class="sa-header-actions">
+                    <div class="btn" onclick="saShowModal('addFunds')">+</div>
+                    <div class="btn" onclick="saShowModal('profile')">👤</div>
+                </div>
+            </div>
+            <div class="sa-game-area">                <div class="sa-wood-frame-top">
+                    <div class="sa-jili-badge">JILI</div>
+                    <div class="sa-buy-bonus" onclick="saBuyBonus()">
+                        <div class="circle">BUY<br>BONUS</div>
+                    </div>
+                </div>
+
+                <div class="sa-title-section">
+                    <div class="sa-game-title">SuperAce</div>
+                    <div class="sa-multiplier-bar">
+                        <span class="sa-mult active" id="sa-m1">×1</span>
+                        <span class="sa-mult" id="sa-m2">×2</span>
+                        <span class="sa-mult" id="sa-m3">×3</span>
+                        <span class="sa-mult" id="sa-m5">×5</span>
+                    </div>
+                    <div class="sa-sub-text">Up to <span class="green">10x</span> puzzle multiplier reward</div>
+                </div>
+
+                <div class="sa-accelerator-counter" id="sa-accelCounter">
+                    <div class="sa-icon">⚡</div>
+                    <div class="sa-text">ACCELERATOR</div>
+                    <div class="sa-count"><span id="sa-accelCollected">0</span>/3</div>
+                </div>
+
+                <div class="sa-slot-container">
+                    <div class="sa-slot-frame">
+                        <div class="sa-slot-grid" id="sa-grid"></div>
+                    </div>
+                </div>
+
+                <div class="sa-win-display">
+                    WIN <span class="amount">Tk <span id="sa-winAmt">0.000</span></span>
+                </div>
+                <div class="sa-free-spins-banner" id="sa-freeSpinsBanner">
+                    <div class="label">⚡ FREE SPINS ⚡</div>
+                    <div class="count" id="sa-freeSpinsCount">10</div>
+                    <div class="sub">spins remaining</div>
+                </div>
+
+                <div class="sa-accel-activation" id="sa-accelActivation">                    <div class="title">⚡ ACCELERATOR!</div>
+                    <div class="desc">10 FREE SPINS ACTIVATED</div>
+                </div>
+
+                <div class="sa-free-spins-end" id="sa-freeSpinsEnd">
+                    <div class="title">FREE SPINS END</div>
+                    <div class="desc">Total Win:</div>
+                    <div class="total">Tk <span id="sa-totalFreeWin">0</span></div>
+                </div>
+                <div class="sa-firebase-status" id="sa-firebaseStatus">
+                    <div class="dot"></div>                    <span id="sa-firebaseStatusText">Connecting...</span>
+                </div>
+            </div>
+
+            <div class="sa-controls">
+                <div class="sa-controls-row">
+                    <button class="sa-ctrl-btn" onclick="saShowModal('settings')" title="Settings">
+                        <svg viewBox="0 0 24 24" fill="#fff"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 00-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1115.6 12 3.6 3.6 0 0112 15.6z"/></svg>      
+                    </button>
+                    <button class="sa-ctrl-btn" onclick="saOpenBetSelector()" title="Select Bet">
+                        <svg viewBox="0 0 24 24" fill="#76ff03"><circle cx="12" cy="12" r="9" fill="none" stroke="#76ff03" stroke-width="2"/><path d="M12 7v10M7 12h10" stroke="#76ff03" stroke-width="2.5" stroke-linecap="round"/></svg>
+                    </button>
+                    <button class="sa-ctrl-btn sa-spin-btn" id="sa-spinBtn" onclick="saSpin()">JILI</button>
+                    <button class="sa-ctrl-btn" id="sa-autoBtn" onclick="saToggleAuto()" title="Autoplay">
+                        <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0020 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 004 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+                    </button>
+                    <button class="sa-ctrl-btn" id="sa-turboBtn" onclick="saToggleTurbo()" title="Turbo">
+                        <svg viewBox="0 0 24 24" fill="#ffeb3b"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+                    </button>
+                </div>
+                <div class="sa-bet-row">
+                    <div><span class="sa-bet-label" onclick="saOpenBetSelector()">Bet Tk <span id="sa-betAmt">0.5</span></span></div>
+                    <div class="sa-autoplay-hint" id="sa-autoHint">Tap to autoplay</div>
+                </div>
+                <div class="sa-balance-row">Balance Tk <span id="sa-footerBal">00</span></div>
+            </div>
+
+            <div class="sa-version">v_134_0005</div>
+
+            <div class="sa-win-popup" id="sa-winPopup">
+                <div class="big">BIG WIN!</div>
+                <div class="amt">Tk <span id="sa-popupAmt">0</span></div>
+            </div>
+            <div class="sa-bet-modal-overlay" id="sa-betOverlay" onclick="saCloseBet(event)">
+                <div class="sa-bet-modal">
+                    <h3>Select Bet Amount</h3>
+                    <div class="sa-bet-options" id="sa-betOptions"></div>                    <button class="sa-close-bet" onclick="document.getElementById('sa-betOverlay').classList.remove('show')">Close</button>
+                </div>
+            </div>
+
+            <div class="sa-modal-overlay" id="sa-modalOverlay" onclick="saCloseModal(event)">
+                <div class="sa-modal" id="sa-modalContent"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Main Logic Script -->
+    <script> 
+        // Global State Variables
+        window.selectedDepM = 'bkash'; 
+        window.selectedWithM = 'bkash';                 window.userPasswordGlobal = '';
+        window.sliderImages = []; 
+        window.currentSlide = 0;
+        let emergencyTimerInterval = null;
+        
+        // --- FIREBASE CONFIGURATION (From Z999 CLUB) ---
+        const firebaseConfig = { 
+            apiKey: "AIzaSyDJONACy8SLz9yZkx42_E7tK5UuR6wn_e8", 
+            authDomain: "shovo-73cfe.firebaseapp.com", 
+            databaseURL: "https://shovo-73cfe-default-rtdb.firebaseio.com", 
+            projectId: "shovo-73cfe", 
+            storageBucket: "shovo-73cfe.firebasestorage.app", 
+            messagingSenderId: "49447211504", 
+            appId: "1:49447211504:web:4889a085981bc856be4d35" 
+        }; 
+        
+        try {
+            firebase.initializeApp(firebaseConfig); 
+            window.db = firebase.database();
+            
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                setTimeout(() => enterDashboard(), 500);
+            }
+        } catch(e) {
+            console.error("Firebase Init Error:", e);
+            alert("অ্যাপ লোড করতে সমস্যা হয়েছে। ইন্টারনেট চেক করুন।");
+        }
+
+        // Unique UID Generator
+        function generateUniqueUID() {
+            const timestamp = Date.now().toString(36).toUpperCase();
+            const random = Math.floor(Math.random() * 100000).toString(36).toUpperCase().padStart(4, '0');            return `Z9${timestamp}${random}`;
+        }
+        // Maintenance Mode Listener
+        if(window.db) {
+            window.db.ref('app_settings/site_status').on('value', (snap) => {
+                const data = snap.val();
+                const maintScreen = document.getElementById('maintenance-screen');
+                const maintMsg = document.getElementById('maintenance-message');
+                if (data && data.isDown === true) {
+                    maintScreen.style.display = 'flex';
+                    maintMsg.innerText = data.message || "সাইট বর্তমানে রক্ষণাবেক্ষণাধীন।";
+                } else {
+                    maintScreen.style.display = 'none';                }
+            });
+
+            // EMERGENCY STOP LISTENER
+            window.db.ref('app_settings/emergency_stop').on('value', (snap) => {
+                const data = snap.val();
+                const overlay = document.getElementById('emergency-overlay');                const timerDisplay = document.getElementById('emergency-timer-display');
+                
+                if (data && data.active === true) {
+                    overlay.style.display = 'flex';
+                    const endTime = data.endTime || Date.now();
+                    
+                    function updateTimer() {
+                        const remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+                        timerDisplay.innerText = remaining;
+                        if (remaining <= 0) {
+                            overlay.style.display = 'none';
+                            if(emergencyTimerInterval) clearInterval(emergencyTimerInterval);
+                        }
+                    }
+                    
+                    updateTimer();
+                    if(emergencyTimerInterval) clearInterval(emergencyTimerInterval);
+                    emergencyTimerInterval = setInterval(updateTimer, 1000);
+                } else {
+                    overlay.style.display = 'none';                    
+                    if(emergencyTimerInterval) {
+                        clearInterval(emergencyTimerInterval);
+                        emergencyTimerInterval = null;
+                    }
+                }
+            });
+        }
+
+        // UI Navigation Functions
+        window.switchAuth = function(t) { 
+            document.getElementById('login-view').classList.toggle('hidden', t === 'reg');             document.getElementById('reg-view').classList.toggle('hidden', t === 'login');             
+            document.getElementById('tab-login').classList.toggle('active', t === 'login'); 
+            document.getElementById('tab-reg').classList.toggle('active', t === 'reg'); 
+        }; 
+
+        window.nav = function(p) { 
+            document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active')); 
+            document.getElementById(p + '-page').classList.add('active'); 
+            document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active')); 
+            const navItem = document.getElementById('n-' + p); 
+            if(navItem) navItem.classList.add('active');
+            if(p === 'withdraw') loadWalletInfo();
+            if(p === 'help') loadMyTickets();        
+        }; 
+
+        window.showToast = function(m) { 
+            const t = document.getElementById('toast'); 
+            t.innerText = m; 
+            t.classList.add('show'); 
+            setTimeout(() => t.classList.remove('show'), 3000);         }; 
+
+        // Authentication Functions
+        window.processLogin = async function() { 
+            const phone = document.getElementById('l-phone').value.trim(); 
+            const pass = document.getElementById('l-pass').value; 
+            if (!phone || !pass) return showToast("❌ সব তথ্য দিন"); 
+            try { 
+                const snapshot = await window.db.ref('users/' + phone).once('value'); 
+                if (snapshot.exists()) { 
+                    const userData = snapshot.val();
+                    if(userData.isBanned === true) {
+                        const reason = userData.blockReason || "কোনো কারণ উল্লেখ করা হয়নি";
+                        return showToast(`🚫 আপনার অ্যাকাউন্ট ব্লক!\nকারণ: ${reason}`);
+                    }
+                    if (userData.password === pass) { 
+                        localStorage.setItem('isLoggedIn', 'true'); 
+                        localStorage.setItem('userPhone', phone); 
+                        window.userPasswordGlobal = pass;                        
+                        enterDashboard(); 
+                    } else { showToast("❌ ভুল পাসওয়ার্ড!"); } 
+                } else { showToast("❌ এই নাম্বারে একাউন্ট নেই!"); } 
+            } catch (error) { 
+                console.error(error);
+                showToast("❌ লগইন ব্যর্থ! ইন্টারনেট চেক করুন।"); 
+            } 
+        };
+
+        window.processRegister = async function() { 
+            const phone = document.getElementById('r-phone').value.trim();             const pass = document.getElementById('r-pass').value;             
+            const refCode = document.getElementById('r-ref').value; 
+            if (!phone || !pass) return showToast("❌ সব তথ্য দিন"); 
+            try { 
+                const checkSnap = await window.db.ref('users/' + phone).once('value');
+                if (checkSnap.exists()) return showToast("❌ এই নাম্বার আগেই রেজিস্টার্ড"); 
+                let newUID = generateUniqueUID();
+                let uidExists = true;
+                let attempts = 0;
+                while(uidExists && attempts < 5) {
+                    const allUsers = await window.db.ref('users/').once('value');
+                    uidExists = false;
+                    if(allUsers.exists()) {
+                        allUsers.forEach(child => {                            
+                            if(child.val().uid === newUID) {
+                                uidExists = true;
+                                newUID = generateUniqueUID();
+                            }
+                        });
+                    }
+                    attempts++;                }
+                const newUser = { 
+                    phone, password: pass, balance: 10, turnover: 0, uid: newUID, 
+                    referredBy: refCode || "", totalCommission: 0, isBanned: false,
+                    createdAt: new Date().toLocaleString()
+                }; 
+                await window.db.ref('users/' + phone).set(newUser); 
+                showToast(`✅ রেজিস্ট্রেশন সফল!\nUID: ${newUID}\n১০ টাকা বোনাস পেয়েছেন।`); 
+                switchAuth('login'); 
+            } catch (error) { 
+                console.error(error);
+                showToast("❌ রেজিস্ট্রেশন ব্যর্থ!"); 
+            } 
+        }; 
+
+        // Dashboard Initialization
+        function enterDashboard() { 
+            document.getElementById('auth-container').classList.add('hidden');             
+            document.getElementById('main-dashboard').classList.remove('hidden'); 
+            const phone = localStorage.getItem('userPhone'); 
+            
+            // Real-time Balance Listener
+            window.db.ref('users/' + phone).on('value', (snap) => { 
+                const data = snap.val(); 
+                if (data) { 
+                    document.getElementById('user-bal').innerText = "৳ " + (data.balance || 0).toFixed(2); 
+                    document.getElementById('uid-gen').innerText = data.uid || 'N/A';
+                    document.getElementById('help-uid').innerText = data.uid || phone;
+                }             }); 
+            // Slider Listener
+            window.db.ref('slider_images/').on('value', (snap) => {
+                window.sliderImages = []; 
+                snap.forEach(child => { 
+                    const img = child.val(); 
+                    if(img.active && img.url) window.sliderImages.push(img.url); 
+                });
+                if(window.sliderImages.length > 0) startSlider(); 
+                else document.getElementById('slider').style.backgroundImage = "url('https://files.catbox.moe/olz4y4.jpg')";
+            });
+
+            // Offer Listener
+            window.db.ref('app_settings/offer').on('value', (snap) => {                
+                const offer = snap.val(); 
+                const container = document.getElementById('offer-container');
+                if(offer && offer.active) {
+                    container.innerHTML = `<div class="offer-banner" style="background:${offer.color || '#8e2de2'}"><div class="offer-title">${offer.title}</div><div class="offer-desc">${offer.description || ''}</div></div>`;
+                } else {
+                    container.innerHTML = '';
+                }
+            });
+            // Telegram Listener
+            window.db.ref('app_settings/telegram').on('value', (snap) => {
+                const tg = snap.val();
+                if(tg && tg.url) {
+                    document.getElementById('help-btn').onclick = () => window.open(tg.url, '_blank');
+                }
+            });
+
+            // DYNAMIC GAMES LISTENER (Modified to include SuperAce)
+            window.db.ref('games/').on('value', (snap) => {
+                const grid = document.getElementById('dynamic-game-grid');
+                let html = '';
+                let gameCount = 0;
+                
+                // Add SuperAce Button First
+                html += `<div class="game-btn" onclick="openSuperAce()">
+                            <img src="https://i.ibb.co.com/8nh8C4mG/Screenshot-2026-06-09-18-20-22-133-com-android-chrome.png" alt="SuperAce">
+                            <p>SUPER ACE</p>
+                        </div>`;
+                gameCount++;
+
+                snap.forEach(child => {                    
+                    const g = child.val();
+                    if(g.active !== false) {
+                        gameCount++;
+                        const safeUrl = (g.url || '#').replace(/'/g, "\\'");
+                        const safeName = (g.name || 'Game').replace(/'/g, "\\'");                                                html += `<div class="game-btn" onclick="playGame('${safeName}', '${safeUrl}')">
+                            <img src="${g.image || 'https://via.placeholder.com/100'}" alt="${g.name}" onerror="this.src='https://via.placeholder.com/100'">
+                            <p>${g.name}</p>
+                        </div>`;
+                    }
+                });
+                
+                if(gameCount > 0) {
+                    grid.innerHTML = html;
+                } else {
+                    grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748b;">
+                        <i class="fas fa-gamepad" style="font-size: 30px; margin-bottom: 10px; opacity: 0.3;"></i>
+                        <p>এখনো কোনো গেম যোগ করা হয়নি</p>
+                    </div>`;                
+                }
+            });
+
+            loadGiftHistory();
+        } 
+
+        // Slider Logic
+        function startSlider() {
+            if(window.sliderImages.length === 0) return;            const slider = document.getElementById('slider'); 
+            const dotsContainer = document.getElementById('slider-dots'); 
+            dotsContainer.innerHTML = '';
+            window.sliderImages.forEach((_, idx) => {
+                const dot = document.createElement('div'); 
+                dot.className = 'dot' + (idx === 0 ? ' active' : ''); 
+                dot.onclick = () => goToSlide(idx); 
+                dotsContainer.appendChild(dot);
+            });
+            slider.style.backgroundImage = `url(${window.sliderImages[0]})`;
+            if(window.sliderInterval) clearInterval(window.sliderInterval);
+            window.sliderInterval = setInterval(() => { 
+                window.currentSlide = (window.currentSlide + 1) % window.sliderImages.length; 
+                goToSlide(window.currentSlide); 
+            }, 3000);
+        }
+        function goToSlide(index) {
+            window.currentSlide = index; 
+            document.getElementById('slider').style.backgroundImage = `url(${window.sliderImages[index]})`;
+            document.querySelectorAll('.dot').forEach((dot, idx) => dot.classList.toggle('active', idx === index));        
+        }
+
+        // Game Logic
+        window.playGame = function(name, url) { 
+            const emergencyOverlay = document.getElementById('emergency-overlay');
+            if(emergencyOverlay && emergencyOverlay.style.display === 'flex') {                
+                showToast("⚠️ গেম সাময়িকভাবে বন্ধ আছে। অপেক্ষা করুন।");                return;
+            }
+            const phone = localStorage.getItem('userPhone'); 
+            const balText = document.getElementById('user-bal').innerText.replace('৳ ', '');
+            if(url && url !== '#' && url !== '') { 
+                window.location.href = url + "?user=" + phone + "&balance=" + balText; 
+            } else { 
+                showToast("গেম শীঘ্রই আসছে..."); 
+            }
+        }; 
+
+        // OPEN SUPER ACE FUNCTION
+        window.openSuperAce = function() {
+            const emergencyOverlay = document.getElementById('emergency-overlay');
+            if(emergencyOverlay && emergencyOverlay.style.display === 'flex') {                
+                showToast("⚠️ গেম সাময়িকভাবে বন্ধ আছে। অপেক্ষা করুন।");
+                return;
+            }
+            document.getElementById('superace-game').style.display = 'block';
+            initSuperAceGame();
+        }
+
+        window.closeGame = function() {
+            document.getElementById('superace-game').style.display = 'none';            stopSaAuto();
+        }
+
+        // Deposit & Withdraw Methods
+        window.setDepM = function(m) { 
+            window.selectedDepM = m; 
+            document.querySelectorAll('#deposit-page .method-item').forEach(i => i.classList.remove('active')); 
+            document.getElementById('d-' + m).classList.add('active'); 
+        };
+        window.setWithM = function(m) { 
+            window.selectedWithM = m; 
+            document.querySelectorAll('#withdraw-page .method-item').forEach(i => i.classList.remove('active')); 
+            document.getElementById('w-' + m).classList.add('active'); 
+        };
+
+        // Wallet Management
+        window.saveWalletInfo = function() {
+            const num = document.getElementById('w-num').value; 
+            if(!num) return showToast("❌ নাম্বার দিন");
+            localStorage.setItem('saved_wallet_num', num); 
+            localStorage.setItem('saved_wallet_method', window.selectedWithM);
+            showToast("✅ নাম্বার সেভ হয়েছে!"); 
+            loadWalletInfo();
+        };
+        window.loadWalletInfo = function() {            
+            const savedNum = localStorage.getItem('saved_wallet_num');             const savedMethod = localStorage.getItem('saved_wallet_method');
+            if(savedNum) {
+                document.getElementById('saved-wallet-display').style.display = 'flex'; 
+                document.getElementById('wallet-edit-form').style.display = 'none';
+                document.getElementById('saved-num-text').innerText = savedNum; 
+                document.getElementById('saved-method-text').innerText = savedMethod ? savedMethod.toUpperCase() : 'BKASH';
+                if(savedMethod) setWithM(savedMethod);            
+            } else { 
+                document.getElementById('saved-wallet-display').style.display = 'none'; 
+                document.getElementById('wallet-edit-form').style.display = 'block'; 
+            }
+        };
+        window.toggleWalletEdit = function(show) {
+            document.getElementById('saved-wallet-display').style.display = show ? 'none' : 'flex'; 
+            document.getElementById('wallet-edit-form').style.display = show ? 'block' : 'none';
+        };
+
+        // Transaction Functions
+        window.submitWith = async function() { 
+            const amt = parseFloat(document.getElementById('w-amt').value); 
+            const passInput = document.getElementById('w-pass').value; 
+            const phone = localStorage.getItem('userPhone'); 
+            const walletNum = localStorage.getItem('saved_wallet_num');
+            if(!walletNum) return showToast("❌ আগে নাম্বার সেভ করুন"); 
+            if (!amt || amt < 100) return showToast("❌ কমপক্ষে ১০ টাকা");             const userSnap = await window.db.ref('users/' + phone).once('value');
+            if(userSnap.exists() && userSnap.val().password !== passInput) return showToast("❌ ভুল পাসওয়ার্ড!");
+            const currentBal = userSnap.val().balance || 0; 
+            if(currentBal < amt) return showToast("❌ পর্যাপ্ত ব্যালেন্স নেই!");
+            try {
+                showToast("⏳ প্রসেসিং...");
+                await window.db.ref('users/' + phone).update({ balance: currentBal - amt });                
+                await window.db.ref('withdrawals/').push({ 
+                    phone, amount: amt, wallet: walletNum, method: window.selectedWithM, 
+                    status: 'Pending', date: new Date().toLocaleString() 
+                }); 
+                showToast("✅ উত্তোলন অনুরোধ সফল!"); 
+                document.getElementById('w-amt').value = ''; 
+                document.getElementById('w-pass').value = '';
+            } catch (error) {                 
+                console.error(error);
+                showToast("❌ ব্যর্থ"); 
+            }
+        };
+
+        // Gift Code System
+        window.claimGiftCode = async function() {
+            const code = document.getElementById('gift-code-input').value.trim().toUpperCase(); 
+            const phone = localStorage.getItem('userPhone'); 
+            if(!code) return showToast("❌ গিফট কোড দিন");                        try {
+                const giftSnap = await window.db.ref('gift_codes/' + code).once('value'); 
+                if(!giftSnap.exists()) return showToast("❌ ভুল কোড!");
+                const gift = giftSnap.val(); 
+                if(!gift.active || gift.usedBy) return showToast("❌ কোডটি ব্যবহার হয়েছে!");
+                const userSnap = await window.db.ref('users/' + phone).once('value'); 
+                const currentBal = userSnap.val().balance || 0;
+                await window.db.ref('users/' + phone).update({ balance: currentBal + gift.amount });
+                await window.db.ref('gift_codes/' + code).update({ usedBy: phone, usedAt: Date.now() });
+                await window.db.ref('users/' + phone + '/gift_history').push({ 
+                    code, amount: gift.amount, date: new Date().toLocaleString(), timestamp: Date.now() 
+                });
+                showToast(`✅ সফল! ৳${gift.amount} যোগ হয়েছে!`); 
+                document.getElementById('gift-code-input').value = ''; 
+                loadGiftHistory();
+            } catch(error) { 
+                console.error(error);
+                showToast("❌ সমস্যা হয়েছে"); 
+            }
+        };
+
+        function loadGiftHistory() {
+            const phone = localStorage.getItem('userPhone');
+            window.db.ref('users/' + phone + '/gift_history').on('value', (snap) => {
+                let html = ''; 
+                snap.forEach(child => {                     const g = child.val(); 
+                    html += `<div class="gift-item"><div><div style="font-weight:bold; color:white;">${g.code}</div><div style="font-size:11px; color:#94a3b8;">${g.date}</div></div><div class="gift-amount">+৳${g.amount}</div></div>`; 
+                });
+                document.getElementById('gift-history-list').innerHTML = html || '<p style="color:#64748b; text-align:center; padding:20px;">কোনো গিফট ব্যবহার করেননি</p>';
+            });
+        }
+        // Support Ticket System
+        window.submitTicket = async function() {
+            const phone = localStorage.getItem('userPhone');
+            const type = document.getElementById('ticket-type').value;
+            const message = document.getElementById('ticket-message').value.trim();
+            const uid = document.getElementById('uid-gen').innerText;
+            if(!message) return showToast("❌ অনুগ্রহ করে সমস্যার বিস্তারিত লিখুন!");            
+            const ticketData = { phone, uid, type, message, status: 'Pending', createdAt: new Date().toLocaleString(), adminReply: '' };
+            try {
+                await window.db.ref('support_tickets/').push(ticketData);
+                showToast("✅ টিকিট সফলভাবে পাঠানো হয়েছে!");
+                document.getElementById('ticket-message').value = '';
+                loadMyTickets();
+            } catch(error) { 
+                console.error(error);
+                showToast("❌ সমস্যা হয়েছে!"); 
+            }
+        };        function loadMyTickets() {
+            const phone = localStorage.getItem('userPhone');
+            window.db.ref('support_tickets/').on('value', (snap) => {
+                let html = '';
+                snap.forEach(child => {
+                    const t = child.val();
+                    if(t.phone === phone) {
+                        const isReplied = t.status === 'Replied';
+                        html += `<div class="ticket-item ${isReplied ? 'replied' : ''}">
+                            <div class="ticket-type">${getTypeName(t.type)} <span style="float:right; font-size:11px; color:${isReplied ? '#10b981' : '#f59e0b'}">${t.status}</span></div>
+                            <div class="ticket-msg">${t.message}</div>
+                            ${t.adminReply ? `<div class="ticket-reply"><strong>অ্যাডমিন:</strong> ${t.adminReply}</div>` : ''}
+                            <div class="ticket-date">${t.createdAt}</div>
+                        </div>`;
+                    }
+                });
+                document.getElementById('my-tickets-list').innerHTML = html || '<p style="color: #64748b; text-align: center; padding: 20px;">কোনো টিকিট নেই</p>';
+            });
+        }
+
+        function getTypeName(type) {
+            const types = { 'deposit': '💰 ডিপোজিট', 'withdraw': '💸 উত্তোলন', 'game': '🎮 গেম', 'account': '👤 অ্যাকাউন্ট', 'other': '📌 অন্যান্য' };
+            return types[type] || type;
+        }
+
+        window.copyUID = function() {
+            const uid = document.getElementById('uid-gen').innerText;            navigator.clipboard.writeText(uid);
+            showToast("✅ UID কপি হয়েছে!");
+        };
+        window.logout = function() { localStorage.clear(); location.reload(); }; 
+        window.refreshBalance = function() { showToast("🔄 ব্যালেন্স আপডেট হয়েছে"); };
+
+        // DIRECT PAYMENT LINK HANDLER
+        window.goToPaymentGateway = function() {
+            const amount = document.getElementById('dep-amount-input').value;
+            const phone = localStorage.getItem('userPhone');
+            const paymentUrl = "https://tanvir323-l.github.io/payment-system-tanvir-for-free/";
+
+            if(!amount || amount < 10) return showToast("❌ কমপক্ষে ১০ টাকা লিখুন");
+
+            // Open Payment Site with Amount and User Phone
+            window.open(paymentUrl + "?amount=" + amount + "&user=" + phone, '_blank');
+        };
+
+        // ============================================
+        // SUPER ACE GAME LOGIC (INTEGRATED WITH FIREBASE)
+        // ============================================
+        let saBalance = 0;
+        let saBet = 0.5;
+        let saWin = 0;
+        let saIsSpinning = false;
+        let saAutoPlay = false;
+        let saTurbo = false;
+        let saAutoTimer = null;
+        let saAcceleratorMode = false;
+        let saFreeSpinsLeft = 0;
+        let saFreeSpinsTotalWin = 0;
+        let saCurrentMultiplier = 1;
+        let saAccelCollected = 0;
+        const SA_ACCEL_REQUIRED = 3;        
+        let saSpinCounter = 0;
+        const SA_SPINS_PER_ACCEL = 50;
+        
+        const saUserPhone = localStorage.getItem('userPhone') || 'guest';
+        const saUserRef = window.db ? window.db.ref('players_game/' + saUserPhone) : null;
+
+        const saSymbols = {
+            ace: `<svg viewBox="0 0 100 130" width="100%" height="100%"><path d="M50 10 L85 50 Q90 60 80 65 L65 60 L55 115 L45 115 L35 60 L20 65 Q10 60 15 50 Z" fill="#000" stroke="#ffd700" stroke-width="2"/><text x="50" y="75" text-anchor="middle" fill="#ffd700" font-family="Impact" font-size="22" font-weight="bold">ACE</text></svg>`,
+            king: `<svg viewBox="0 0 100 130" width="100%" height="100%"><rect x="10" y="20" width="80" height="100" fill="#fffbe6" rx="3"/><path d="M20 35 L30 20 L40 30 L50 15 L60 30 L70 20 L80 35 Z" fill="#ffd700" stroke="#b8860b" stroke-width="1.5"/><circle cx="30" cy="25" r="2" fill="#d32f2f"/><circle cx="50" cy="20" r="2" fill="#d32f2f"/><circle cx="70" cy="25" r="2" fill="#d32f2f"/><rect x="35" y="35" width="30" height="15" fill="#1565c0"/><circle cx="50" cy="55" r="14" fill="#ffe0b2" stroke="#5d4037" stroke-width="1"/><path d="M36 60 Q50 50 64 60 L64 80 Q50 90 36 80 Z" fill="#1565c0"/><path d="M38 65 L62 65 M38 72 L62 72" stroke="#ffd700" stroke-width="1.5"/><path d="M40 50 Q50 42 60 50" stroke="#5d4037" stroke-width="2" fill="none"/><circle cx="44" cy="55" r="1.5" fill="#000"/><circle cx="56" cy="55" r="1.5" fill="#000"/><path d="M47 62 Q50 64 53 62" stroke="#000" stroke-width="1" fill="none"/><path d="M35 85 Q50 95 65 85 L65 115 L35 115 Z" fill="#1565c0"/><path d="M40 90 L60 90 M40 97 L60 97 M40 104 L60 104" stroke="#ffd700" stroke-width="1.5"/></svg>`,
+            queen: `<svg viewBox="0 0 100 130" width="100%" height="100%"><rect x="10" y="20" width="80" height="100" fill="#fff" rx="3"/><path d="M25 35 L35 20 L45 30 L50 18 L55 30 L65 20 L75 35 Z" fill="#d32f2f" stroke="#8b0000" stroke-width="1.5"/><circle cx="35" cy="25" r="1.5" fill="#ffd700"/><circle cx="50" cy="22" r="1.5" fill="#ffd700"/><circle cx="65" cy="25" r="1.5" fill="#ffd700"/><path d="M30 35 L70 35 L70 42 L30 42 Z" fill="#8b0000"/><circle cx="50" cy="55" r="13" fill="#ffe0b2" stroke="#5d4037" stroke-width="1"/><path d="M35 50 Q50 40 65 50 L65 65 Q50 55 35 65 Z" fill="#5d4037"/><path d="M37 60 Q50 55 63 60 L63 85 Q50 95 37 85 Z" fill="#d32f2f"/><path d="M40 65 L60 65 M40 72 L60 72 M40 79 L60 79" stroke="#fff" stroke-width="1"/><circle cx="44" cy="55" r="1.5" fill="#000"/><circle cx="56" cy="55" r="1.5" fill="#000"/><path d="M35 90 Q50 100 65 90 L65 115 L35 115 Z" fill="#d32f2f"/><path d="M40 95 L60 95 M40 102 L60 102 M40 109 L60 109" stroke="#ffd700" stroke-width="1"/></svg>`,
+            jack: `<svg viewBox="0 0 100 130" width="100%" height="100%"><rect x="10" y="20" width="80" height="100" fill="#fff" rx="3"/><path d="M30 35 L30 25 L70 25 L70 35 Z" fill="#1565c0"/><path d="M30 35 L70 35 L70 40 L30 40 Z" fill="#ffd700"/><circle cx="50" cy="55" r="13" fill="#ffe0b2" stroke="#5d4037" stroke-width="1"/><path d="M35 50 Q50 42 65 50 L65 65 Q50 55 35 65 Z" fill="#ffd54f"/><path d="M37 60 Q50 55 63 60 L63 85 Q50 95 37 85 Z" fill="#1565c0"/><path d="M40 65 L60 65 M40 72 L60 72" stroke="#fff" stroke-width="1.5"/><circle cx="44" cy="55" r="1.5" fill="#000"/><circle cx="56" cy="55" r="1.5" fill="#000"/><path d="M35 90 Q50 100 65 90 L65 115 L35 115 Z" fill="#1565c0"/><path d="M40 95 L60 95 M40 102 L60 102" stroke="#ffd700" stroke-width="1.5"/></svg>`,            spade: `<svg viewBox="0 0 100 130" width="100%" height="100%"><path d="M50 15 Q75 40 75 60 Q75 75 60 75 Q55 75 52 72 L55 95 L45 95 L48 72 Q45 75 40 75 Q25 75 25 60 Q25 40 50 15 Z" fill="#0d1b3d"/></svg>`,
+            accelerator: `<svg viewBox="0 0 100 130" width="100%" height="100%"><circle cx="50" cy="65" r="45" fill="#ff1744" stroke="#ffd700" stroke-width="3"/><path d="M35 65 L50 50 L65 65 L50 80 Z" fill="#ffd700"/><text x="50" y="105" text-anchor="middle" fill="#ffd700" font-family="Impact" font-size="16" font-weight="bold">ACCEL</text></svg>`
+        };
+        const saCardTypes = [
+            {type:'ace',rank:'A'}, {type:'king',rank:'K'}, {type:'queen',rank:'Q'},
+            {type:'jack',rank:'J'}, {type:'spade',rank:''}        ];
+        const saBetOptions = [0.5, 1, 2, 5, 10, 20, 50, 100];
+        const saAccelMultipliers = [4, 6, 8, 10, 18, 26, 36];
+        const saAccelWinAmounts = [2, 5, 10, 50];
+
+        function initSuperAceGame() {
+            const grid = document.getElementById('sa-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 20; i++) {
+                const card = document.createElement('div');
+                card.className = 'sa-card';
+                saRenderCard(card, saCardTypes[i % 5]);
+                grid.appendChild(card);            
+            }
+            saUpdateUI();
+            
+            // Listen for balance changes from main app
+            if(window.db) {
+                window.db.ref('users/' + saUserPhone).on('value', (snap) => {
+                    const data = snap.val();
+                    if(data && data.balance !== undefined) {
+                        saBalance = data.balance;
+                        saUpdateUI();
+                    }
+                });
+            }
+        }
+
+        function saRenderCard(el, sym) {
+            el.className = 'sa-card';
+            el.innerHTML = '';
+            if (sym.rank) {
+                const r = document.createElement('div');
+                r.className = 'sa-card-rank'; r.textContent = sym.rank;                
+                el.appendChild(r);
+            }
+            const s = document.createElement('div');
+            s.className = 'sa-card-sym'; s.innerHTML = saSymbols[sym.type];
+            el.appendChild(s);
+        }
+
+        function saRandomSym() { 
+            if (saAcceleratorMode) {
+                return saCardTypes[Math.floor(Math.random() * saCardTypes.length)];            }  
+            if (saSpinCounter > 0 && saSpinCounter % SA_SPINS_PER_ACCEL === 0) {
+                return {type:'accelerator', rank:''};
+            }
+            return saCardTypes[Math.floor(Math.random() * saCardTypes.length)]; 
+        }
+        function saUpdateUI() {
+            document.getElementById('sa-headerBal').textContent = '৳' + saBalance.toFixed(2);
+            document.getElementById('sa-footerBal').textContent = saBalance.toFixed(3);
+            document.getElementById('sa-betAmt').textContent = saBet.toFixed(1);
+            document.getElementById('sa-winAmt').textContent = saWin.toFixed(3);
+            document.getElementById('sa-accelCollected').textContent = saAccelCollected;
+            
+            const counter = document.getElementById('sa-accelCounter');
+            if (saAccelCollected >= SA_ACCEL_REQUIRED) {
+                counter.classList.add('ready');
+            } else {
+                counter.classList.remove('ready');            
+            }
+        }
+
+        function saOpenBetSelector() {
+            if (saIsSpinning || saAcceleratorMode) return;
+            const overlay = document.getElementById('sa-betOverlay');
+            const opts = document.getElementById('sa-betOptions');
+            opts.innerHTML = '';
+            saBetOptions.forEach(b => {
+                const btn = document.createElement('button');
+                btn.className = 'sa-bet-opt' + (b === saBet ? ' selected' : '');
+                btn.textContent = 'Tk ' + b;
+                btn.onclick = () => { 
+                    saBet = b; 
+                    saUpdateUI(); 
+                    overlay.classList.remove('show'); 
+                };
+                opts.appendChild(btn);
+            });
+            overlay.classList.add('show');
+        }
+        function saCloseBet(e) {
+            if (e.target.id === 'sa-betOverlay') e.target.classList.remove('show');
+        }
+
+        function saCheckMatches() {
+            const cards = document.getElementById('sa-grid').querySelectorAll('.sa-card');
+            const matches = new Set();
+            
+            // Horizontal
+            for (let row = 0; row < 3; row++) {                for (let col = 0; col < 3; col++) {
+                    const idx = row * 5 + col;
+                    const sym1 = cards[idx].dataset.sym;
+                    const sym2 = cards[idx+1].dataset.sym;
+                    const sym3 = cards[idx+2].dataset.sym;
+                    if (sym1 && sym1 === sym2 && sym2 === sym3 && sym1 !== 'accelerator') {
+                        matches.add(idx); matches.add(idx+1); matches.add(idx+2);
+                    }                }
+            }
+            
+            // Vertical
+            for (let col = 0; col < 5; col++) {
+                for (let row = 0; row < 2; row++) {
+                    const idx = row * 5 + col;
+                    const sym1 = cards[idx].dataset.sym;
+                    const sym2 = cards[idx+5].dataset.sym;
+                    const sym3 = cards[idx+10].dataset.sym;                    
+                    if (sym1 && sym1 === sym2 && sym2 === sym3 && sym1 !== 'accelerator') {
+                        matches.add(idx); matches.add(idx+5); matches.add(idx+10);
+                    }
+                }
+            }
+            
+            return matches;
+        }
+
+        function saRenderCardWithSym(el, sym) {
+            saRenderCard(el, sym);
+            el.dataset.sym = sym.type;
+            if (sym.type === 'accelerator') {
+                el.classList.add('sa-accelerator-card');
+            }
+        }
+
+        async function saSpin() {
+            if (saIsSpinning) return;
+            
+            if (!saAcceleratorMode && saBalance < saBet) { 
+                saShowModal('noBalance'); 
+                saStopAuto();                 
+                return; 
+            }
+
+            saIsSpinning = true;
+            
+            if (!saAcceleratorMode) {
+                saBalance -= saBet;
+                saSpinCounter++;
+                // Update Firebase immediately on spin                if(window.db) window.db.ref('users/' + saUserPhone).update({ balance: saBalance });
+            }  
+            
+            saWin = 0; 
+            saUpdateUI();
+
+            const spinBtn = document.getElementById('sa-spinBtn');
+            spinBtn.classList.add('spinning');
+            const cards = document.getElementById('sa-grid').querySelectorAll('.sa-card');
+            const duration = saTurbo ? 400 : 1200;
+            const interval = saTurbo ? 40 : 80;
+            let elapsed = 0;
+
+            const animInterval = setInterval(() => {
+                cards.forEach(c => { 
+                    c.classList.add('spinning'); 
+                    const sym = saRandomSym();                    
+                    saRenderCardWithSym(c, sym);
+                });
+                elapsed += interval;
+                if (elapsed >= duration) { 
+                    clearInterval(animInterval); 
+                    saFinishSpin(); 
+                }
+            }, interval);
+        }
+
+        async function saFinishSpin() {
+            const cards = document.getElementById('sa-grid').querySelectorAll('.sa-card');
+            cards.forEach(c => { 
+                c.classList.remove('spinning'); 
+                const sym = saRandomSym();
+                saRenderCardWithSym(c, sym);
+            });
+            document.getElementById('sa-spinBtn').classList.remove('spinning');
+
+            if (saAcceleratorMode) {
+                saFreeSpinsLeft--;
+                saUpdateFreeSpinsDisplay();
+                
+                if (saFreeSpinsLeft <= 0) {                    
+                    await saEndFreeSpins();
+                    return;
+                }
+            }
+
+            if (!saAcceleratorMode) {
+                let accelFound = 0;
+                cards.forEach(c => {                    if (c.dataset.sym === 'accelerator') {
+                        accelFound++;        
+                        c.classList.add('breaking');
+                    }
+                });
+
+                if (accelFound > 0) {
+                    await saSleep(500);
+                    saAccelCollected += accelFound;
+                    if (saAccelCollected > SA_ACCEL_REQUIRED) saAccelCollected = SA_ACCEL_REQUIRED;                    saUpdateUI();
+                    
+                    cards.forEach(c => {
+                        if (c.dataset.sym === 'accelerator') {
+                            const sym = saRandomSym();
+                            saRenderCardWithSym(c, sym);
+                            c.classList.remove('breaking');
+                            c.classList.add('new-card');                        
+                        }
+                    });
+                    
+                    await saSleep(400);
+                }
+
+                if (saAccelCollected >= SA_ACCEL_REQUIRED) {
+                    saTriggerAccelerator();
+                    await saSleep(2000);
+                }
+            }
+
+            await saCascadeMatches();
+
+            saUpdateUI(); 
+            saIsSpinning = false;
+            
+            if (saAcceleratorMode && saFreeSpinsLeft > 0) {
+                setTimeout(() => saSpin(), saTurbo ? 500 : 1500);  
+            } else if (saAutoPlay && !saAcceleratorMode) {
+                saAutoTimer = setTimeout(saSpin, saTurbo ? 300 : 1000);
+            }
+        }
+
+        async function saCascadeMatches() {            
+            let hasMatches = true;
+            let cascadeCount = 0;
+            const maxCascades = 5;
+
+            while (hasMatches && cascadeCount < maxCascades) {
+                const matches = saCheckMatches();
+                if (matches.size === 0) {                    hasMatches = false;
+                    break;
+                }
+
+                const cards = document.getElementById('sa-grid').querySelectorAll('.sa-card');
+                
+                matches.forEach(idx => {
+                    const row = Math.floor(idx / 5);
+                    if (row < 3) {
+                        cards[idx].classList.add('breaking');
+                    }                });
+
+                await saSleep(500);
+
+                matches.forEach(idx => {
+                    const row = Math.floor(idx / 5);
+                    if (row < 3) {                        
+                        const sym = saRandomSym();
+                        saRenderCardWithSym(cards[idx], sym);
+                        cards[idx].classList.remove('breaking');
+                        cards[idx].classList.add('new-card');
+                    }
+                });
+
+                const mult = saAcceleratorMode ? saAccelMultipliers[Math.floor(Math.random() * saAccelMultipliers.length)] : [1,2,3,5][Math.floor(Math.random()*4)];
+                const winAmt = saAcceleratorMode ? saAccelWinAmounts[Math.floor(Math.random() * saAccelWinAmounts.length)] : saBet * mult * (Math.random()*2+1);
+                saWin += winAmt;
+                saBalance += winAmt;
+                
+                if (saAcceleratorMode) {
+                    saFreeSpinsTotalWin += winAmt;
+                }
+                
+                // Update Firebase with Win
+                if(window.db) window.db.ref('users/' + saUserPhone).update({ balance: saBalance });
+                
+                saUpdateMultiplier(mult);
+                saUpdateUI();
+                await saSleep(400);
+                cascadeCount++;
+            }
+
+            if (saWin > 0) {                
+                saShowWinPopup(saWin);
+            }
+        }
+
+        function saTriggerAccelerator() {
+            saAcceleratorMode = true;            saFreeSpinsLeft = 10;
+            saFreeSpinsTotalWin = 0;
+            saAccelCollected = 0;
+            saUpdateUI();
+            
+            const activation = document.getElementById('sa-accelActivation');
+            activation.classList.add('show');
+            
+            setTimeout(() => {
+                activation.classList.remove('show');
+                document.getElementById('sa-freeSpinsBanner').classList.add('show');
+                saUpdateFreeSpinsDisplay();                setTimeout(() => saSpin(), 1000);
+            }, 2000);
+        }
+
+        function saUpdateFreeSpinsDisplay() {
+            document.getElementById('sa-freeSpinsCount').textContent = saFreeSpinsLeft;            
+            if (saFreeSpinsLeft <= 0) {
+                document.getElementById('sa-freeSpinsBanner').classList.remove('show');
+            }
+        }
+
+        async function saEndFreeSpins() {
+            const endPopup = document.getElementById('sa-freeSpinsEnd');
+            document.getElementById('sa-totalFreeWin').textContent = saFreeSpinsTotalWin.toFixed(2);
+            endPopup.classList.add('show');
+            
+            document.getElementById('sa-freeSpinsBanner').classList.remove('show');
+            
+            await saSleep(3000);
+            
+            endPopup.classList.remove('show');
+            
+            saAcceleratorMode = false;
+            saFreeSpinsLeft = 0;
+            saFreeSpinsTotalWin = 0;
+            
+            saIsSpinning = false;
+            saUpdateUI();
+            
+            if (saAutoPlay) {
+                if (saBalance >= saBet) {
+                    saAutoTimer = setTimeout(saSpin, saTurbo ? 300 : 1000);
+                } else {                    
+                    saStopAuto();
+                    saShowModal('noBalance');
+                }
+            }
+        }
+        function saUpdateMultiplier(m) {
+            saCurrentMultiplier = m;
+            ['sa-m1','sa-m2','sa-m3','sa-m5'].forEach(id => document.getElementById(id).classList.remove('active'));
+            const map = {1:'sa-m1',2:'sa-m2',3:'sa-m3',5:'sa-m5'};
+            if (map[m]) document.getElementById(map[m]).classList.add('active');
+        }
+
+        function saShowWinPopup(amount) {
+            const p = document.getElementById('sa-winPopup');
+            document.getElementById('sa-popupAmt').textContent = amount.toFixed(2);
+            p.classList.add('show');
+            setTimeout(() => p.classList.remove('show'), 2000);        }
+
+        function saToggleAuto() {
+            saAutoPlay = !saAutoPlay;
+            const btn = document.getElementById('sa-autoBtn');            
+            const hint = document.getElementById('sa-autoHint');
+            if (saAutoPlay) {
+                btn.style.background = 'radial-gradient(circle at 30% 30%, #76ff03, #2e7d32)';
+                hint.textContent = 'Autoplay ON';
+                if (!saIsSpinning && !saAcceleratorMode) saSpin();
+            } else { saStopAuto(); }
+        }
+
+        function saStopAuto() {  
+            saAutoPlay = false; clearTimeout(saAutoTimer);
+            document.getElementById('sa-autoBtn').style.background = '';
+            document.getElementById('sa-autoHint').textContent = 'Tap to autoplay';
+        }
+
+        function saToggleTurbo() {
+            saTurbo = !saTurbo;
+            document.getElementById('sa-turboBtn').style.background = saTurbo ? 'radial-gradient(circle at 30% 30%, #ffeb3b, #f57f17)' : '';
+        }
+
+        function saBuyBonus() {
+            if (saIsSpinning || saAcceleratorMode) return;
+            const cost = saBet * 50;
+            if (saBalance < cost) { saShowModal('noBalanceBonus'); return; }
+            if (confirm(`Buy Bonus for Tk ${cost.toFixed(2)}?`)) {
+                saBalance -= cost; saUpdateUI();
+                if(window.db) window.db.ref('users/' + saUserPhone).update({ balance: saBalance });
+                saTriggerAccelerator();
+            }        
+        }
+
+        function saShowModal(type) {
+            const o = document.getElementById('sa-modalOverlay');            const c = document.getElementById('sa-modalContent');
+            let h = '';
+            if (type==='settings') h=`<h3>⚙️ Settings</h3><div class="sa-modal-row"><span>Sound</span><span>ON 🔊</span></div><div class="sa-modal-row"><span>Music</span><span>ON 🎵</span></div><div class="sa-modal-row"><span>Vibration</span><span>ON 📳</span></div><button class="sa-modal-btn" onclick="saCloseModal()">Close</button>`;
+            else if (type==='addFunds') h=`<h3>Add Funds</h3><div class="sa-modal-row"><span>Current</span><span>Tk ${saBalance.toFixed(2)}</span></div><p>Please go to Deposit page to add money.</p><button class="sa-modal-btn" onclick="saCloseModal(); closeGame(); nav('deposit');">Go to Deposit</button>`;
+            else if (type==='profile') h=`<h3>👤 Profile</h3><div class="sa-modal-row"><span>User</span><span>${saUserPhone}</span></div><button class="sa-modal-btn" onclick="saCloseModal()">Close</button>`;
+            else if (type==='noBalance') h=`<h3>Insufficient Balance</h3><p>Please add funds to continue.</p><button class="sa-modal-btn" onclick="saCloseModal()">OK</button>`;
+            else if (type==='noBalanceBonus') h=`<h3>Not Enough Balance</h3><p>Need Tk ${(saBet*50).toFixed(2)} for Buy Bonus.</p><button class="sa-modal-btn" onclick="saCloseModal()">OK</button>`;
+            c.innerHTML = h; o.classList.add('show');
+        }
+
+        function saCloseModal(e) { if(!e||e.target.id==='sa-modalOverlay') document.getElementById('sa-modalOverlay').classList.remove('show'); }
+        function saSleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+    </script> </body> 
+</html>
                     <div class="hero-banner" id="slider"></div> 
                     <div class="slider-dots" id="slider-dots"></div>
                 </div> 
